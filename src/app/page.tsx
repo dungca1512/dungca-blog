@@ -1,20 +1,8 @@
 import { BlogFeed } from "@/components/blog-feed";
-import { getAllPosts, getAllProjects } from "@/lib/content";
-import { getShowcaseRepositories } from "@/lib/github";
+import { getAllPosts } from "@/lib/content";
 
 export default async function Home() {
-  const [posts, projects, showcase] = await Promise.all([
-    getAllPosts(),
-    getAllProjects(),
-    getShowcaseRepositories(),
-  ]);
+  const posts = await getAllPosts();
 
-  return (
-    <BlogFeed
-      mode="home"
-      posts={posts}
-      projectCount={projects.length}
-      repoCount={showcase.repositories.length}
-    />
-  );
+  return <BlogFeed mode="home" posts={posts} />;
 }

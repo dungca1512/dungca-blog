@@ -8,8 +8,6 @@ type BlogFeedMode = "home" | "blog";
 type BlogFeedProps = {
   mode: BlogFeedMode;
   posts: PostListItem[];
-  projectCount?: number;
-  repoCount?: number;
 };
 
 type Topic = {
@@ -57,8 +55,7 @@ type LeftMenuItem = {
 
 const LEFT_MENU: LeftMenuItem[] = [
   { label: "Home", href: "/" },
-  { label: "Stories", href: "/blog" },
-  { label: "AI Demos", href: "/projects" },
+  { label: "Blog", href: "/blog" },
   { label: "Portfolio", href: "https://dungca1512.github.io/", external: true },
   { label: "GitHub", href: "https://github.com/dungca1512", external: true },
 ];
@@ -75,18 +72,13 @@ const WHO_TO_FOLLOW = [
     href: "https://github.com/dungca1512",
   },
   {
-    name: "AI Gateway",
-    role: "Flagship infra project",
-    href: "https://github.com/dungca1512/ai-gateway",
+    name: "LinkedIn",
+    role: "Professional profile",
+    href: "https://www.linkedin.com/in/dungca/",
   },
 ] as const;
 
-export function BlogFeed({
-  mode,
-  posts,
-  projectCount = 0,
-  repoCount = 0,
-}: BlogFeedProps) {
+export function BlogFeed({ mode, posts }: BlogFeedProps) {
   const highlightPosts = posts.slice(0, 3);
   const latestPosts = posts.slice(0, 12);
   const topics = collectTopics(posts);
@@ -140,12 +132,10 @@ export function BlogFeed({
           <section className="rail-card">
             <p className="rail-title">Current focus</p>
             <p className="rail-text">
-              Building resilient LLM systems with clear reliability controls,
-              plus ML notes written from implementation experience.
+              Viet bai theo huong implementation-first: doc de ap dung duoc ngay
+              vao du an ML/AI thuc te.
             </p>
-            <p className="rail-stats">
-              {posts.length} posts · {projectCount} demos · {repoCount} repos
-            </p>
+            <p className="rail-stats">{posts.length} posts · {topics.length} topics</p>
           </section>
         ) : null}
       </aside>
@@ -162,20 +152,25 @@ export function BlogFeed({
 
         {mode === "home" ? (
           <article className="story-feature">
-            <p className="story-feature-meta">From portfolio · dungca1512.github.io</p>
-            <h2>AI/ML Engineer focused on systems that actually ship</h2>
+            <p className="story-feature-meta">Welcome to my blog</p>
+            <h2>Ghi chu machine learning va AI engineering de dung duoc ngay</h2>
             <p>
-              I work on multi-provider LLM gateways, research-agent workflows,
-              ASR fine-tuning, and data platforms. This blog is where I break
-              down both fundamentals and production lessons.
+              Day la noi minh tong hop kien thuc tu ML co ban den cac bai hoc
+              trien khai he thong AI thuc te. Toan bo trang nay uu tien bai
+              viet blog, de ban doc nhanh va hoc theo lo trinh ro rang.
             </p>
             <div className="story-feature-actions">
               <Link className="story-link-pill" href="/blog">
                 Read all posts
               </Link>
-              <Link className="story-link-pill" href="/projects">
-                Explore AI demos
-              </Link>
+              <a
+                className="story-link-pill"
+                href="https://dungca1512.github.io/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                View portfolio
+              </a>
             </div>
           </article>
         ) : null}

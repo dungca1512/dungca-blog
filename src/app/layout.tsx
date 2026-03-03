@@ -41,6 +41,9 @@ export default function RootLayout({
             </div>
 
             <div className="topbar-right">
+              <Link className="topbar-link" href="/blog">
+                Blog
+              </Link>
               <a
                 className="topbar-link"
                 href="https://dungca1512.github.io/"
@@ -49,9 +52,6 @@ export default function RootLayout({
               >
                 Portfolio
               </a>
-              <Link className="topbar-link" href="/projects">
-                AI Demos
-              </Link>
               <a
                 className="topbar-pill"
                 href="mailto:dungca1512@gmail.com"
