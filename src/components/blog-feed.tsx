@@ -56,42 +56,58 @@ type LeftMenuItem = {
 const LEFT_MENU: LeftMenuItem[] = [
   { label: "Trang chủ", href: "/" },
   { label: "Blog", href: "/blog" },
+  { label: "AI Demos", href: "/projects" },
   { label: "Portfolio", href: "https://dungca1512.github.io/", external: true },
   { label: "GitHub", href: "https://github.com/dungca1512", external: true },
 ];
 
-const WHO_TO_FOLLOW = [
+const STUDY_LINKS = [
   {
-    name: "Công Anh Dũng",
-    role: "AI/ML Engineer",
-    href: "https://www.linkedin.com/in/dungca/",
+    label: "CS231n - Computer Vision",
+    href: "https://cs231n.stanford.edu/",
   },
   {
-    name: "dungca1512",
-    role: "GitHub cá nhân",
+    label: "CS224n - NLP",
+    href: "https://web.stanford.edu/class/cs224n/",
+  },
+  {
+    label: "Machine Learning Mastery",
+    href: "https://machinelearningmastery.com/",
+  },
+] as const;
+
+const CONNECT_LINKS = [
+  {
+    name: "Portfolio cá nhân",
+    role: "Dự án, kinh nghiệm, hành trình nghề nghiệp",
+    href: "https://dungca1512.github.io/",
+  },
+  {
+    name: "GitHub dungca1512",
+    role: "Mã nguồn và demo AI",
     href: "https://github.com/dungca1512",
   },
   {
-    name: "Portfolio",
-    role: "Kinh nghiệm và dự án nổi bật",
-    href: "https://dungca1512.github.io/",
+    name: "LinkedIn",
+    role: "Kết nối chuyên môn",
+    href: "https://www.linkedin.com/in/dungca/",
   },
 ] as const;
 
 export function BlogFeed({ mode, posts }: BlogFeedProps) {
-  const highlightPosts = posts.slice(0, 3);
+  const highlightPosts = posts.slice(0, 4);
   const latestPosts = posts.slice(0, 12);
   const topics = collectTopics(posts);
 
   const title =
     mode === "home"
-      ? "Dành cho bạn"
-      : "Bài viết mới về ML cơ bản và AI Engineering";
+      ? "Blog của Dũng"
+      : "Danh sách bài viết";
 
   const subtitle =
     mode === "home"
-      ? "Luồng bài viết thực chiến của Dũng: từ nền tảng machine learning đến triển khai hệ thống AI."
-      : "Chuỗi ghi chú có cấu trúc, đi từ kiến thức nền tảng đến production.";
+      ? "Nơi tổng hợp ghi chú học máy, AI engineering và kinh nghiệm triển khai thực tế."
+      : "Chuỗi bài có lộ trình rõ ràng, ưu tiên kiến thức dùng được ngay.";
 
   return (
     <main className="feed-layout">
@@ -142,22 +158,18 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
 
       <section className="feed-center">
         <header className="feed-head">
-          <div className="feed-tabs" aria-hidden>
-            <span className="feed-tab feed-tab-active">Dành cho bạn</span>
-            <span className="feed-tab">Nổi bật</span>
-          </div>
+          <p className="feed-kicker">Kho tri thức cá nhân</p>
           <h1 className="feed-title">{title}</h1>
           <p className="feed-subtitle">{subtitle}</p>
         </header>
 
         {mode === "home" ? (
           <article className="story-feature">
-            <p className="story-feature-meta">Chào mừng đến blog của mình</p>
-            <h2>Ghi chú Machine Learning và AI Engineering để áp dụng ngay</h2>
+            <p className="story-feature-meta">Giới thiệu nhanh</p>
+            <h2>Đơn giản, có cấu trúc, tập trung vào khả năng áp dụng thực tế</h2>
             <p>
-              Đây là nơi mình tổng hợp kiến thức từ ML cơ bản đến các bài học
-              triển khai hệ thống AI thực tế. Toàn bộ trang này ưu tiên bài
-              viết blog để bạn đọc nhanh và học theo lộ trình rõ ràng.
+              Mình viết theo format dễ đọc: vấn đề, ví dụ, checklist và bước
+              triển khai. Mục tiêu là học nhanh, làm thật, đo được kết quả.
             </p>
             <div className="story-feature-actions">
               <Link className="story-link-pill" href="/blog">
@@ -181,16 +193,17 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
           </p>
         ) : (
           <div className="story-list">
-            {posts.map((post, index) => (
+            {posts.map((post) => (
               <article className="story-card" key={post.slug}>
                 <div className="story-main">
-                  <p className="story-meta">Trong Blog của Dũng · {formatDate(post.date)}</p>
+                  <p className="story-meta">
+                    {formatDate(post.date)} · {estimateReadTime(post)}
+                  </p>
                   <h2 className="story-title">
                     <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                   </h2>
                   <p className="story-summary">{post.summary}</p>
                   <div className="story-footer">
-                    <span>{estimateReadTime(post)}</span>
                     {post.tags.length > 0 ? (
                       <div className="story-tags">
                         {post.tags.slice(0, 3).map((tag) => (
@@ -202,10 +215,6 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
                     ) : null}
                   </div>
                 </div>
-
-                <Link className={`story-thumb thumb-${index % 6}`} href={`/blog/${post.slug}`}>
-                  <span>{(post.tags[0] ?? "ml").slice(0, 12)}</span>
-                </Link>
               </article>
             ))}
           </div>
@@ -214,7 +223,7 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
 
       <aside className="feed-right">
         <section className="rail-card">
-          <p className="rail-title">Gợi ý nổi bật</p>
+          <p className="rail-title">Bài nên đọc</p>
           {highlightPosts.length === 0 ? (
             <p className="rail-empty">Chưa có gợi ý.</p>
           ) : (
@@ -247,9 +256,22 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
         </section>
 
         <section className="rail-card">
-          <p className="rail-title">Nên theo dõi</p>
+          <p className="rail-title">Tài nguyên học tập</p>
+          <ul className="rail-link-list">
+            {STUDY_LINKS.map((item) => (
+              <li key={item.href}>
+                <a href={item.href} rel="noreferrer" target="_blank">
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="rail-card">
+          <p className="rail-title">Kết nối</p>
           <div className="follow-list">
-            {WHO_TO_FOLLOW.map((item) => (
+            {CONNECT_LINKS.map((item) => (
               <a href={item.href} key={item.href} rel="noreferrer" target="_blank">
                 <strong>{item.name}</strong>
                 <span>{item.role}</span>

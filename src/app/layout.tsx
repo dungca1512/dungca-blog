@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
+import { Noto_Sans, Noto_Serif } from "next/font/google";
 import Link from "next/link";
 
 import "./globals.css";
+
+const fontUi = Noto_Sans({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-ui-family",
+  display: "swap",
+});
+
+const fontSerif = Noto_Serif({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-serif-family",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -19,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body>
+      <body className={`${fontUi.variable} ${fontSerif.variable}`}>
         <header className="topbar">
           <div className="topbar-inner">
             <div className="topbar-left">
