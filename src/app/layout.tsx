@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans, Noto_Serif } from "next/font/google";
 import Link from "next/link";
 
+import { FloatingNavControls } from "@/components/floating-nav-controls";
 import { TopSearch } from "@/components/top-search";
 import { getAllPosts } from "@/lib/content";
 
@@ -86,6 +87,7 @@ export default async function RootLayout({
         <div className="site-shell">
           {children}
         </div>
+        <FloatingNavControls />
       </body>
     </html>
   );

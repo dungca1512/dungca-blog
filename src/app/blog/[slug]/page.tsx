@@ -89,10 +89,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </aside>
 
       <section className="article-center section-stack">
-        <Link className="back-link" href="/blog">
-          Quay lại blog
-        </Link>
-
         <header className="section-stack reading-header">
           <h1 className="page-title">{post.title}</h1>
           <p className="meta-line">{formatDate(post.date)}</p>
