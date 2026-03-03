@@ -11,7 +11,7 @@ export default async function Home() {
   ]);
 
   return (
-    <main className="section-stack">
+    <main className="section-stack page-shell">
       <section className="section-stack">
         <h1 className="page-title">Blog + AI Showcase</h1>
         <p className="page-intro">

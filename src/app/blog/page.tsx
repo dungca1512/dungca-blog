@@ -13,7 +13,7 @@ export default async function BlogPage() {
   const posts = await getAllPosts();
 
   return (
-    <main className="section-stack">
+    <main className="section-stack page-shell">
       <section className="section-stack">
         <h1 className="page-title">Blog Markdown</h1>
         <p className="page-intro">

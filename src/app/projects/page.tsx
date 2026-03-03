@@ -47,7 +47,7 @@ export default async function ProjectsPage() {
   );
 
   return (
-    <main className="section-stack">
+    <main className="section-stack page-shell">
       <section className="section-stack">
         <h1 className="page-title">AI Demos</h1>
         <p className="page-intro">

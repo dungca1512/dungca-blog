@@ -58,12 +58,12 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
     : "";
 
   return (
-    <main className="section-stack">
+    <main className="section-stack reading-main">
       <Link className="back-link" href="/projects">
         Quay lai trang AI demos
       </Link>
 
-      <header className="section-stack">
+      <header className="section-stack reading-header">
         <h1 className="page-title">{project.title}</h1>
         <p className="meta-line">{formatDate(project.date)}</p>
 

@@ -22,9 +22,12 @@ export default function RootLayout({
       <body>
         <div className="site-shell">
           <header className="site-header">
-            <Link className="brand" href="/">
-              Dungca Blog
-            </Link>
+            <div className="brand-wrap">
+              <Link className="brand" href="/">
+                Dungca Blog
+              </Link>
+              <p className="brand-subtitle">Thoughtful notes on code, AI, and building.</p>
+            </div>
 
             <nav className="site-nav">
               <Link className="nav-link" href="/blog">
