@@ -1,6 +1,6 @@
 ---
-title: "ML co ban #4: Chon metric dung cho tung bai toan"
-summary: "Accuracy khong du. Cach chon metric phu hop cho classification, regression va bai toan mat can bang."
+title: "ML cơ bản #4: Chọn metric đúng cho từng bài toán"
+summary: "Accuracy không đủ. Cách chọn metric phù hợp cho classification, regression và bài toán mất cân bằng."
 date: "2026-03-08"
 tags:
   - ml-basics
@@ -8,42 +8,42 @@ tags:
   - model-evaluation
 ---
 
-## Vi sao metric quan trong?
+## Vì sao metric quan trọng?
 
-Model co the "dep" tren 1 metric nhung that bai tren muc tieu business.
+Model có thể "đẹp" trên 1 metric nhưng thất bại trên mục tiêu business.
 
-Vi du: du doan gian lan, accuracy cao van vo nghia neu bo sot qua nhieu case gian lan.
+Ví dụ: dự đoán gian lận, accuracy cao vẫn vô nghĩa nếu bỏ sót quá nhiều case gian lận.
 
-## Classification metrics co ban
+## Classification metrics cơ bản
 
-- Accuracy: de hieu, nhung kem khi data imbalance.
-- Precision: du doan positive thi dung duoc bao nhieu.
-- Recall: bat duoc bao nhieu positive that.
-- F1-score: can bang precision va recall.
-- AUC-ROC / AUC-PR: danh gia theo toan bo threshold.
+- Accuracy: dễ hiểu, nhưng kém khi data imbalance.
+- Precision: dự đoán positive thì đúng được bao nhiêu.
+- Recall: bắt được bao nhiêu positive thật.
+- F1-score: cân bằng precision và recall.
+- AUC-ROC / AUC-PR: đánh giá theo toàn bộ threshold.
 
-## Regression metrics co ban
+## Regression metrics cơ bản
 
-- MAE: de dien giai, it nhay voi outlier hon MSE.
-- MSE/RMSE: phat nang loi lon.
-- R2: ty le phuong sai duoc giai thich.
+- MAE: dễ diễn giải, ít nhạy với outlier hơn MSE.
+- MSE/RMSE: phạt nặng lỗi lớn.
+- R2: tỉ lệ phương sai được giải thích.
 
-## Chon metric theo ngu canh
+## Chọn metric theo ngữ cảnh
 
-- Spam/phishing/fraud: uu tien recall + precision tradeoff.
-- De xuat san pham/noi dung: can metric ranking (Precision@K, NDCG).
-- Gia/forecast: bat dau voi MAE + RMSE.
+- Spam/phishing/fraud: ưu tiên recall + precision tradeoff.
+- Đề xuất sản phẩm/nội dung: cần metric ranking (Precision@K, NDCG).
+- Giá/forecast: bắt đầu với MAE + RMSE.
 
-## Luu y ve threshold
+## Lưu ý về threshold
 
-Classification khong chi co 0.5.
-Can chon threshold theo chi phi sai lech (false positive vs false negative).
+Classification không chỉ có 0.5.
+Cần chọn threshold theo chi phí sai lệch (false positive vs false negative).
 
-## Checklist truoc khi report
+## Checklist trước khi report
 
-1. Metric chinh gan voi KPI business chua?
-2. Co bao cao them metric bo tro khong?
-3. Co confusion matrix/phan tich loi hay chua?
-4. Co test theo nhom du lieu quan trong khong?
+1. Metric chính gắn với KPI business chưa?
+2. Có báo cáo thêm metric bổ trợ không?
+3. Có confusion matrix/phân tích lỗi hay chưa?
+4. Có test theo nhóm dữ liệu quan trọng không?
 
-Dung metric dung se giup ban tranh nhung quyet dinh model "dep tren slide nhung hong tren production".
+Dùng metric đúng sẽ giúp bạn tránh những quyết định model "đẹp trên slide nhưng hỏng trên production".

@@ -1,6 +1,6 @@
 ---
-title: "ML co ban #3: Overfitting, underfitting va bias-variance"
-summary: "Nham hieu pho bien nhat khi train model va cach xu ly bang regularization, data, validation."
+title: "ML cơ bản #3: Overfitting, underfitting và bias-variance"
+summary: "Nhầm hiểu phổ biến nhất khi train model và cách xử lý bằng regularization, data, validation."
 date: "2026-03-07"
 tags:
   - ml-basics
@@ -8,50 +8,50 @@ tags:
   - bias-variance
 ---
 
-## Nhin nhanh
+## Nhìn nhanh
 
-- **Underfitting**: model qua don gian, hoc chua du.
-- **Overfitting**: model nho du lieu train qua ky, tong quat kem.
+- **Underfitting**: model quá đơn giản, học chưa đủ.
+- **Overfitting**: model nhớ dữ liệu train quá kỹ, tổng quát kém.
 
-## Dau hieu nhan biet
+## Dấu hiệu nhận biết
 
 ### Underfitting
 
 - Train error cao
-- Validation error cung cao
+- Validation error cũng cao
 
 ### Overfitting
 
-- Train error rat thap
-- Validation error cao hon dang ke
+- Train error rất thấp
+- Validation error cao hơn đáng kể
 
 ## Bias - Variance tradeoff
 
-- Bias cao -> de underfit
-- Variance cao -> de overfit
+- Bias cao -> dễ underfit
+- Variance cao -> dễ overfit
 
-Muc tieu la tim diem can bang phu hop voi du lieu va bai toan.
+Mục tiêu là tìm điểm cân bằng phù hợp với dữ liệu và bài toán.
 
-## Cach giam overfitting
+## Cách giảm overfitting
 
-1. Them du lieu chat luong.
-2. Dung regularization (L1/L2, dropout).
+1. Thêm dữ liệu chất lượng.
+2. Dùng regularization (L1/L2, dropout).
 3. Early stopping.
-4. Giam do phuc tap model.
-5. Feature selection hop ly.
+4. Giảm độ phức tạp model.
+5. Feature selection hợp lý.
 
-## Cach giam underfitting
+## Cách giảm underfitting
 
-1. Tang do phuc tap model.
-2. Train them epoch (neu chua hoi tu).
-3. Them feature co y nghia.
-4. Giam regularization qua manh.
+1. Tăng độ phức tạp model.
+2. Train thêm epoch (nếu chưa hội tụ).
+3. Thêm feature có ý nghĩa.
+4. Giảm regularization quá mạnh.
 
-## Quy trinh debug de xai ngay
+## Quy trình debug để xài ngay
 
-1. Ve learning curve (train vs validation).
-2. Xac dinh ro dang bi underfit hay overfit.
-3. Doi 1 nhom bien moi lan (model/data/regularization).
-4. Log ket qua co he thong, tranh "thu ngau nhien".
+1. Vẽ learning curve (train vs validation).
+2. Xác định rõ đang bị underfit hay overfit.
+3. Đổi 1 nhóm biến mỗi lần (model/data/regularization).
+4. Log kết quả có hệ thống, tránh "thử ngẫu nhiên".
 
-ML tot khong phai la model phuc tap nhat, ma la model on dinh nhat tren du lieu chua gap.
+ML tốt không phải là model phức tạp nhất, mà là model ổn định nhất trên dữ liệu chưa gặp.

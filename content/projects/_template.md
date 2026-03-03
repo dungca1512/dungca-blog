@@ -1,6 +1,6 @@
 ---
-title: "Ten demo"
-summary: "Tom tat ngan ve demo."
+title: "Tên demo"
+summary: "Tóm tắt ngắn về demo."
 date: "2026-03-03"
 tags:
   - ai
@@ -10,6 +10,6 @@ demoUrl: "https://demo.example.com"
 published: false
 ---
 
-## Tong quan
+## Tổng quan
 
-Noi dung demo...
+Nội dung demo...

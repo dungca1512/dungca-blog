@@ -22,7 +22,7 @@ function estimateReadTime(post: PostListItem): string {
     .filter(Boolean).length;
 
   const minutes = Math.max(3, Math.ceil(words / 42));
-  return `${minutes} min read`;
+  return `${minutes} phút đọc`;
 }
 
 function collectTopics(posts: PostListItem[]): Topic[] {
@@ -54,7 +54,7 @@ type LeftMenuItem = {
 };
 
 const LEFT_MENU: LeftMenuItem[] = [
-  { label: "Home", href: "/" },
+  { label: "Trang chủ", href: "/" },
   { label: "Blog", href: "/blog" },
   { label: "Portfolio", href: "https://dungca1512.github.io/", external: true },
   { label: "GitHub", href: "https://github.com/dungca1512", external: true },
@@ -62,19 +62,19 @@ const LEFT_MENU: LeftMenuItem[] = [
 
 const WHO_TO_FOLLOW = [
   {
-    name: "Cong Anh Dung",
+    name: "Công Anh Dũng",
     role: "AI/ML Engineer",
     href: "https://www.linkedin.com/in/dungca/",
   },
   {
     name: "dungca1512",
-    role: "GitHub profile",
+    role: "GitHub cá nhân",
     href: "https://github.com/dungca1512",
   },
   {
-    name: "LinkedIn",
-    role: "Professional profile",
-    href: "https://www.linkedin.com/in/dungca/",
+    name: "Portfolio",
+    role: "Kinh nghiệm và dự án nổi bật",
+    href: "https://dungca1512.github.io/",
   },
 ] as const;
 
@@ -85,19 +85,19 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
 
   const title =
     mode === "home"
-      ? "For you"
-      : "Latest notes on ML fundamentals and AI systems";
+      ? "Dành cho bạn"
+      : "Bài viết mới về ML cơ bản và AI Engineering";
 
   const subtitle =
     mode === "home"
-      ? "A practical feed from Cong Anh Dung: machine learning basics, production AI patterns, and experiments."
-      : "Structured notes from fundamentals to production engineering.";
+      ? "Luồng bài viết thực chiến của Dũng: từ nền tảng machine learning đến triển khai hệ thống AI."
+      : "Chuỗi ghi chú có cấu trúc, đi từ kiến thức nền tảng đến production.";
 
   return (
     <main className="feed-layout">
       <aside className="feed-left">
-        <nav className="rail-card rail-menu" aria-label="Primary">
-          <p className="rail-title">Navigation</p>
+        <nav className="rail-card rail-menu" aria-label="Điều hướng chính">
+          <p className="rail-title">Điều hướng</p>
           <ul>
             {LEFT_MENU.map((item) => (
               <li key={item.label}>
@@ -114,9 +114,9 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
         </nav>
 
         <section className="rail-card">
-          <p className="rail-title">Latest</p>
+          <p className="rail-title">Mới nhất</p>
           {latestPosts.length === 0 ? (
-            <p className="rail-empty">No post yet.</p>
+            <p className="rail-empty">Chưa có bài viết nào.</p>
           ) : (
             <ul className="rail-post-list">
               {latestPosts.map((post) => (
@@ -130,12 +130,12 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
 
         {mode === "home" ? (
           <section className="rail-card">
-            <p className="rail-title">Current focus</p>
+            <p className="rail-title">Trọng tâm hiện tại</p>
             <p className="rail-text">
-              Viet bai theo huong implementation-first: doc de ap dung duoc ngay
-              vao du an ML/AI thuc te.
+              Viết bài theo hướng implementation-first: đọc là áp dụng được
+              ngay vào dự án ML/AI thực tế.
             </p>
-            <p className="rail-stats">{posts.length} posts · {topics.length} topics</p>
+            <p className="rail-stats">{posts.length} bài viết · {topics.length} chủ đề</p>
           </section>
         ) : null}
       </aside>
@@ -143,8 +143,8 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
       <section className="feed-center">
         <header className="feed-head">
           <div className="feed-tabs" aria-hidden>
-            <span className="feed-tab feed-tab-active">For you</span>
-            <span className="feed-tab">Featured</span>
+            <span className="feed-tab feed-tab-active">Dành cho bạn</span>
+            <span className="feed-tab">Nổi bật</span>
           </div>
           <h1 className="feed-title">{title}</h1>
           <p className="feed-subtitle">{subtitle}</p>
@@ -152,16 +152,16 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
 
         {mode === "home" ? (
           <article className="story-feature">
-            <p className="story-feature-meta">Welcome to my blog</p>
-            <h2>Ghi chu machine learning va AI engineering de dung duoc ngay</h2>
+            <p className="story-feature-meta">Chào mừng đến blog của mình</p>
+            <h2>Ghi chú Machine Learning và AI Engineering để áp dụng ngay</h2>
             <p>
-              Day la noi minh tong hop kien thuc tu ML co ban den cac bai hoc
-              trien khai he thong AI thuc te. Toan bo trang nay uu tien bai
-              viet blog, de ban doc nhanh va hoc theo lo trinh ro rang.
+              Đây là nơi mình tổng hợp kiến thức từ ML cơ bản đến các bài học
+              triển khai hệ thống AI thực tế. Toàn bộ trang này ưu tiên bài
+              viết blog để bạn đọc nhanh và học theo lộ trình rõ ràng.
             </p>
             <div className="story-feature-actions">
               <Link className="story-link-pill" href="/blog">
-                Read all posts
+                Đọc tất cả bài viết
               </Link>
               <a
                 className="story-link-pill"
@@ -169,20 +169,22 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
                 rel="noreferrer"
                 target="_blank"
               >
-                View portfolio
+                Xem portfolio
               </a>
             </div>
           </article>
         ) : null}
 
         {posts.length === 0 ? (
-          <p className="feed-empty">No posts yet. Add markdown files in content/posts.</p>
+          <p className="feed-empty">
+            Chưa có bài viết. Hãy thêm file Markdown vào <code>content/posts</code>.
+          </p>
         ) : (
           <div className="story-list">
             {posts.map((post, index) => (
               <article className="story-card" key={post.slug}>
                 <div className="story-main">
-                  <p className="story-meta">In Cong Anh Dung Blog · {formatDate(post.date)}</p>
+                  <p className="story-meta">Trong Blog của Dũng · {formatDate(post.date)}</p>
                   <h2 className="story-title">
                     <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                   </h2>
@@ -212,9 +214,9 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
 
       <aside className="feed-right">
         <section className="rail-card">
-          <p className="rail-title">Staff Picks</p>
+          <p className="rail-title">Gợi ý nổi bật</p>
           {highlightPosts.length === 0 ? (
-            <p className="rail-empty">No picks yet.</p>
+            <p className="rail-empty">Chưa có gợi ý.</p>
           ) : (
             <div className="pick-list">
               {highlightPosts.map((post) => (
@@ -230,9 +232,9 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
         </section>
 
         <section className="rail-card">
-          <p className="rail-title">Recommended topics</p>
+          <p className="rail-title">Chủ đề đề xuất</p>
           {topics.length === 0 ? (
-            <p className="rail-empty">No tags available.</p>
+            <p className="rail-empty">Chưa có thẻ chủ đề.</p>
           ) : (
             <div className="topic-cloud">
               {topics.map((topic) => (
@@ -245,7 +247,7 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
         </section>
 
         <section className="rail-card">
-          <p className="rail-title">Who to follow</p>
+          <p className="rail-title">Nên theo dõi</p>
           <div className="follow-list">
             {WHO_TO_FOLLOW.map((item) => (
               <a href={item.href} key={item.href} rel="noreferrer" target="_blank">

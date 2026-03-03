@@ -350,7 +350,7 @@ export async function getFeaturedReposConfig(): Promise<FeaturedReposConfig> {
       return DEFAULT_FEATURED_REPOS_CONFIG;
     }
 
-    console.warn("Khong doc duoc featured-repos.json", error);
+    console.warn("Không đọc được featured-repos.json", error);
     return DEFAULT_FEATURED_REPOS_CONFIG;
   }
 }

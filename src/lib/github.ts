@@ -55,7 +55,7 @@ function toGitHubRepo(repo: GitHubRepoApi): GitHubRepo {
     forks: repo.forks_count,
     fullName: repo.full_name,
     homepage: repo.homepage ?? "",
-    language: repo.language ?? "Unknown",
+    language: repo.language ?? "Chưa rõ",
     name: repo.name,
     stars: repo.stargazers_count,
     topics: Array.isArray(repo.topics) ? repo.topics : [],
@@ -90,14 +90,14 @@ async function fetchRepositories(username: string): Promise<GitHubRepo[]> {
     );
 
     if (!response.ok) {
-      console.warn(`Khong lay duoc repo GitHub (${response.status})`);
+      console.warn(`Không lấy được repo GitHub (${response.status})`);
       return [];
     }
 
     const payload = (await response.json()) as GitHubRepoApi[];
     return payload.map(toGitHubRepo);
   } catch (error) {
-    console.warn("Khong ket noi duoc GitHub API", error);
+    console.warn("Không kết nối được GitHub API", error);
     return [];
   }
 }

@@ -32,7 +32,7 @@ export async function generateMetadata({
 
   if (!project) {
     return {
-      title: "Khong tim thay demo",
+      title: "Không tìm thấy demo",
     };
   }
 
@@ -60,7 +60,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   return (
     <main className="section-stack reading-main">
       <Link className="back-link" href="/projects">
-        Quay lai trang AI demos
+        Quay lại trang AI demos
       </Link>
 
       <header className="section-stack reading-header">
@@ -80,7 +80,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
         <div className="actions">
           {project.repo ? (
             <a className="action-link" href={repoUrl} rel="noreferrer" target="_blank">
-              Mo repository
+              Mở repository
             </a>
           ) : null}
 
@@ -91,7 +91,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
               rel="noreferrer"
               target="_blank"
             >
-              Mo live demo
+              Mở live demo
             </a>
           ) : null}
         </div>

@@ -27,7 +27,7 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Khong tim thay bai viet",
+      title: "Không tìm thấy bài viết",
     };
   }
 
@@ -48,7 +48,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <main className="section-stack reading-main">
       <Link className="back-link" href="/blog">
-        Quay lai danh sach blog
+        Quay lại danh sách blog
       </Link>
 
       <header className="section-stack reading-header">

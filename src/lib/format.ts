@@ -1,6 +1,6 @@
 export function formatDate(value: string): string {
   if (!value) {
-    return "Chua cap nhat ngay";
+    return "Chưa cập nhật ngày";
   }
 
   const date = new Date(value);

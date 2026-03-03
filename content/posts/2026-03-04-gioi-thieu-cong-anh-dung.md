@@ -1,6 +1,6 @@
 ---
-title: "Gioi thieu: Cong Anh Dung va hanh trinh AI Engineering"
-summary: "Toi la AI/ML Engineer o Ha Noi, xay he thong LLM production, research agent, ASR va data platform."
+title: "Giới thiệu: Công Anh Dũng và hành trình AI Engineering"
+summary: "Tôi là AI/ML Engineer ở Hà Nội, xây hệ thống LLM production, research agent, ASR và data platform."
 date: "2026-03-04"
 tags:
   - profile
@@ -8,24 +8,24 @@ tags:
   - career
 ---
 
-## Xin chao, toi la Cong Anh Dung
+## Xin chào, tôi là Công Anh Dũng
 
-Toi la **AI/ML Engineer** (Ha Noi, Viet Nam), hien dang tap trung vao cac bai toan:
+Tôi là **AI/ML Engineer** (Hà Nội, Việt Nam), hiện đang tập trung vào các bài toán:
 
 - LLM platform engineering
 - Research automation agents
 - Speech/NLP systems
 - Data + recommendation infrastructure
 
-Thong tin nay duoc dong bo theo portfolio `dungca1512.github.io` va GitHub `dungca1512`.
+Thông tin này được đồng bộ theo portfolio `dungca1512.github.io` và GitHub `dungca1512`.
 
-## Toi dang xay dung gi?
+## Tôi đang xây dựng gì?
 
 ### 1. AI Gateway (multi-provider)
 
 Repo: [ai-gateway](https://github.com/dungca1512/ai-gateway)
 
-Muc tieu la hop nhat truy cap OpenAI, Gemini, Claude va local worker trong 1 lop API, dong thoi bo sung cac control quan trong cho production:
+Mục tiêu là hợp nhất truy cập OpenAI, Gemini, Claude và local worker trong 1 lớp API, đồng thời bổ sung các control quan trọng cho production:
 
 - routing
 - fallback/retry
@@ -38,30 +38,30 @@ Muc tieu la hop nhat truy cap OpenAI, Gemini, Claude va local worker trong 1 lop
 
 Repo: [research-agent](https://github.com/dungca1512/research-agent)
 
-Toi xay pipeline LangChain + LangGraph theo vong lap:
+Tôi xây pipeline LangChain + LangGraph theo vòng lặp:
 
 `decompose -> search -> synthesize -> report`
 
-He thong ket hop tim kiem web va ArXiv de tao bao cao co tinh cau truc.
+Hệ thống kết hợp tìm kiếm web và ArXiv để tạo báo cáo có tính cấu trúc.
 
-### 3. Whisper Fine-tuning cho ASR tieng Nhat
+### 3. Whisper Fine-tuning cho ASR tiếng Nhật
 
 Repo: [whisper-finetune-ja](https://github.com/dungca1512/whisper-finetune-ja)
 
-Toi quan tam den quy trinh train co the tai lap va van hanh on dinh cho speech system, tu train script den export/inference.
+Tôi quan tâm đến quy trình train có thể tái lập và vận hành ổn định cho speech system, từ train script đến export/inference.
 
-## Quan diem lam ky thuat cua toi
+## Quan điểm làm kỹ thuật của tôi
 
-- Uu tien reliability truoc khi toi uu do phuc tap.
-- Ket hop AI sinh voi deterministic checks (validator/schema/log).
-- Luon thiet ke fallback cho tinh huong provider/model khong on dinh.
-- Xay he thong de co the do luong duoc ket qua business.
+- Ưu tiên reliability trước khi tối ưu độ phức tạp.
+- Kết hợp AI sinh với deterministic checks (validator/schema/log).
+- Luôn thiết kế fallback cho tình huống provider/model không ổn định.
+- Xây hệ thống để có thể đo lường được kết quả business.
 
-## Blog nay se viet gi?
+## Blog này sẽ viết gì?
 
-Blog nay se tap trung vao 2 nhom bai:
+Blog này sẽ tập trung vào 2 nhóm bài:
 
-- ML co ban (de hoc dung nen tang)
-- AI production engineering (de dua mo hinh vao he thong that)
+- ML cơ bản (để học đúng nền tảng)
+- AI production engineering (để đưa mô hình vào hệ thống thật)
 
-Neu ban muon trao doi cong viec/hop tac: `dungca1512@gmail.com`.
+Nếu bạn muốn trao đổi công việc/hợp tác: `dungca1512@gmail.com`.

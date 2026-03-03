@@ -1,6 +1,6 @@
 ---
-title: "ML co ban #1: Supervised vs Unsupervised Learning"
-summary: "Phan biet 2 paradigms lon trong machine learning, khi nao dung va sai lam pho bien."
+title: "ML cơ bản #1: Supervised vs Unsupervised Learning"
+summary: "Phân biệt 2 paradigms lớn trong machine learning, khi nào dùng và sai lầm phổ biến."
 date: "2026-03-05"
 tags:
   - ml-basics
@@ -8,24 +8,24 @@ tags:
   - unsupervised-learning
 ---
 
-## Tai sao can phan biet?
+## Tại sao cần phân biệt?
 
-Rat nhieu ban moi hoc ML hay bat dau bang model, nhung bo qua cau hoi quan trong: **du lieu cua ban co label hay khong?**
+Rất nhiều bạn mới học ML hay bắt đầu bằng model, nhưng bỏ qua câu hỏi quan trọng: **dữ liệu của bạn có label hay không?**
 
-Cau hoi nay quyet dinh ban dang o bai toan supervised hay unsupervised.
+Câu hỏi này quyết định bạn đang ở bài toán supervised hay unsupervised.
 
 ## Supervised Learning
 
-Ban co du lieu dau vao `X` va nhan dung `y`.
-Model hoc ham `f(X) -> y`.
+Bạn có dữ liệu đầu vào `X` và nhãn đúng `y`.
+Model học hàm `f(X) -> y`.
 
-Vi du:
+Ví dụ:
 
-- Phan loai email spam/khong spam
-- Du doan gia nha
-- Du doan churn
+- Phân loại email spam/không spam
+- Dự đoán giá nhà
+- Dự đoán churn
 
-Model thuong gap:
+Model thường gặp:
 
 - Linear/Logistic Regression
 - Random Forest
@@ -34,39 +34,39 @@ Model thuong gap:
 
 ## Unsupervised Learning
 
-Ban chi co du lieu `X`, **khong co nhan**.
-Model tim cau truc an trong du lieu.
+Bạn chỉ có dữ liệu `X`, **không có nhãn**.
+Model tìm cấu trúc ẩn trong dữ liệu.
 
-Vi du:
+Ví dụ:
 
-- Gom cum khach hang
-- Giam chieu de visualize
-- Phat hien bat thuong
+- Gom cụm khách hàng
+- Giảm chiều để visualize
+- Phát hiện bất thường
 
-Model thuong gap:
+Model thường gặp:
 
 - KMeans
 - Hierarchical clustering
 - DBSCAN
 - PCA / t-SNE / UMAP
 
-## Khi nao dung cai nao?
+## Khi nào dùng cái nào?
 
-- Neu co label ro rang va muc tieu la du doan -> supervised.
-- Neu chua co label, muon kham pha pattern -> unsupervised.
+- Nếu có label rõ ràng và mục tiêu là dự đoán -> supervised.
+- Nếu chưa có label, muốn khám phá pattern -> unsupervised.
 
-Trong he thong thuc te, 2 nhom nay thuong ket hop voi nhau.
+Trong hệ thống thực tế, 2 nhóm này thường kết hợp với nhau.
 
-## Sai lam pho bien
+## Sai lầm phổ biến
 
-1. Co it label nhung van co gang train model phuc tap.
-2. Dung clustering roi dien giai cluster nhu "truth" tuyet doi.
-3. Khong validate bai toan business truoc khi chon model.
+1. Có ít label nhưng vẫn cố gắng train model phức tạp.
+2. Dùng clustering rồi diễn giải cluster như "truth" tuyệt đối.
+3. Không validate bài toán business trước khi chọn model.
 
-## Checklist truoc khi train
+## Checklist trước khi train
 
-- Label chat luong den muc nao?
-- Muc tieu metric la gi (accuracy, recall, MAE...)?
-- Co baseline don gian de so sanh chua?
+- Label chất lượng đến mức nào?
+- Mục tiêu metric là gì (accuracy, recall, MAE...)?
+- Có baseline đơn giản để so sánh chưa?
 
-Bai tiep theo: cach chia train/validation/test cho dung.
+Bài tiếp theo: cách chia train/validation/test cho đúng.

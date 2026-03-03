@@ -1,6 +1,6 @@
 ---
 title: "Demo AI local"
-summary: "Trang mau de ban viet chi tiet 1 du an AI bang Markdown."
+summary: "Trang mẫu để bạn viết chi tiết 1 dự án AI bằng Markdown."
 date: "2026-03-03"
 tags:
   - ai
@@ -11,17 +11,17 @@ demoUrl: ""
 published: true
 ---
 
-## Mo ta
+## Mô tả
 
-Ban co the dung file nay de mo ta nhanh 1 du an AI:
+Bạn có thể dùng file này để mô tả nhanh 1 dự án AI:
 
-- Bai toan giai quyet
-- Kien truc
-- Cong nghe
-- Ket qua
+- Bài toán giải quyết
+- Kiến trúc
+- Công nghệ
+- Kết quả
 
-## Huong dan cap nhat
+## Hướng dẫn cập nhật
 
-- Doi `title`, `summary`, `date`.
-- Neu co repo tren GitHub, dien ten repo vao truong `repo`.
-- Neu co website demo, dien URL vao `demoUrl`.
+- Đổi `title`, `summary`, `date`.
+- Nếu có repo trên GitHub, điền tên repo vào trường `repo`.
+- Nếu có website demo, điền URL vào `demoUrl`.

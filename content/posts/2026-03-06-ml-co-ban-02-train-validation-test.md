@@ -1,6 +1,6 @@
 ---
-title: "ML co ban #2: Chia train / validation / test dung cach"
-summary: "Hieu dung vai tro cua tung tap du lieu de tranh overfitting va danh gia sai model."
+title: "ML cơ bản #2: Chia train / validation / test đúng cách"
+summary: "Hiểu đúng vai trò của từng tập dữ liệu để tránh overfitting và đánh giá sai model."
 date: "2026-03-06"
 tags:
   - ml-basics
@@ -8,54 +8,54 @@ tags:
   - data-split
 ---
 
-## 3 tap du lieu co vai tro gi?
+## 3 tập dữ liệu có vai trò gì?
 
 ### Train set
 
-Dung de hoc tham so model.
+Dùng để học tham số model.
 
 ### Validation set
 
-Dung de chon hyperparameters, so sanh model, quyet dinh architecture.
+Dùng để chọn hyperparameters, so sánh model, quyết định architecture.
 
 ### Test set
 
-Chi dung 1 lan o cuoi de uoc luong hieu nang thuc te.
+Chỉ dùng 1 lần ở cuối để ước lượng hiệu năng thực tế.
 
-## Ti le chia tham khao
+## Tỉ lệ chia tham khảo
 
-- Nho du lieu: 70/15/15
-- Vua/lon du lieu: 80/10/10
+- Nhỏ dữ liệu: 70/15/15
+- Vừa/lớn dữ liệu: 80/10/10
 
-Khong co ti le "chuan duy nhat"; quan trong la tinh dai dien cua moi tap.
+Không có tỉ lệ "chuẩn duy nhất"; quan trọng là tính đại diện của mỗi tập.
 
-## Neu la du lieu theo thoi gian?
+## Nếu là dữ liệu theo thời gian?
 
-Khong random split.
-Can chia theo truc thoi gian (train qua khu, validate gan hien tai, test la doan moi nhat).
+Không random split.
+Cần chia theo trục thời gian (train quá khứ, validate gần hiện tại, test là đoạn mới nhất).
 
-Neu random sai, ban co the bi data leakage.
+Nếu random sai, bạn có thể bị data leakage.
 
-## Cross-validation khi nao can?
+## Cross-validation khi nào cần?
 
-Voi dataset nho, K-fold cross-validation giup ket qua on dinh hon 1 lan split.
+Với dataset nhỏ, K-fold cross-validation giúp kết quả ổn định hơn 1 lần split.
 
-Nhung nho:
+Nhưng nhớ:
 
-- CV dung cho model selection
-- Cuoi cung van phai co 1 test set giu nguyen
+- CV dùng cho model selection
+- Cuối cùng vẫn phải có 1 test set giữ nguyên
 
-## 4 loi danh gia model rat hay gap
+## 4 lỗi đánh giá model rất hay gặp
 
-1. Tune model dua tren test set.
+1. Tune model dựa trên test set.
 2. Chia random cho time-series.
-3. Feature engineering tren toan bo data truoc khi split.
-4. Chi bao cao 1 metric duy nhat.
+3. Feature engineering trên toàn bộ data trước khi split.
+4. Chỉ báo cáo 1 metric duy nhất.
 
-## Rule thuc chien
+## Rule thực chiến
 
-- Dat test set sang mot ben ngay tu dau.
-- Moi quyet dinh tuning phai dua tren validation.
-- Chi report final score tren test khi da chot model.
+- Đặt test set sang một bên ngay từ đầu.
+- Mọi quyết định tuning phải dựa trên validation.
+- Chỉ report final score trên test khi đã chốt model.
 
-Bai tiep theo: overfitting, underfitting va bias-variance tradeoff.
+Bài tiếp theo: overfitting, underfitting và bias-variance tradeoff.

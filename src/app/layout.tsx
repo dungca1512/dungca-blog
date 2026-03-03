@@ -5,11 +5,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Cong Anh Dung Blog",
-    template: "%s | Cong Anh Dung Blog",
+    default: "Blog của Dũng",
+    template: "%s | Blog của Dũng",
   },
   description:
-    "AI/ML Engineer blog by Cong Anh Dung: production LLM systems, research agents, ASR, and ML notes.",
+    "Blog AI/ML Engineer của Dũng: hệ thống LLM production, research agent, ASR và ghi chú machine learning.",
 };
 
 export default function RootLayout({
@@ -23,17 +23,17 @@ export default function RootLayout({
         <header className="topbar">
           <div className="topbar-inner">
             <div className="topbar-left">
-              <button aria-label="Open navigation" className="icon-btn" type="button">
+              <button aria-label="Mở điều hướng" className="icon-btn" type="button">
                 ☰
               </button>
               <Link className="topbar-brand" href="/">
-                Cong Anh Dung
+                Blog của Dũng
               </Link>
               <label className="topbar-search" htmlFor="search-blog">
                 <span>⌕</span>
                 <input
                   id="search-blog"
-                  placeholder="Search notes, ideas, and ML posts"
+                  placeholder="Tìm kiếm ghi chú, ý tưởng và bài ML"
                   readOnly
                   type="text"
                 />
@@ -42,7 +42,7 @@ export default function RootLayout({
 
             <div className="topbar-right">
               <Link className="topbar-link" href="/blog">
-                Blog
+                Bài viết
               </Link>
               <a
                 className="topbar-link"
@@ -58,10 +58,10 @@ export default function RootLayout({
                 rel="noreferrer"
                 target="_blank"
               >
-                Contact
+                Liên hệ
               </a>
               <a
-                aria-label="GitHub profile"
+                aria-label="Hồ sơ GitHub"
                 className="avatar-dot"
                 href="https://github.com/dungca1512"
                 rel="noreferrer"

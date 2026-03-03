@@ -1,6 +1,6 @@
 ---
-title: "Khoi tao blog Markdown tren Next.js"
-summary: "Bo khung blog da san sang: them file .md la co bai viet moi."
+title: "Khởi tạo blog Markdown trên Next.js"
+summary: "Bộ khung blog đã sẵn sàng: thêm file .md là có bài viết mới."
 date: "2026-03-03"
 tags:
   - nextjs
@@ -8,23 +8,32 @@ tags:
   - cloudflare-pages
 ---
 
-## Muc tieu
+## Mục tiêu
 
-Project nay duoc to chuc de ban co the:
+Project này được tổ chức để bạn có thể:
 
-- Viet bai bang Markdown trong `content/posts/`.
-- Tu dong tao trang danh sach bai viet (`/blog`).
-- Tu dong tao trang chi tiet bai viet (`/blog/[slug]`).
+- Viết bài bằng Markdown trong `content/posts/`.
+- Tự động tạo trang danh sách bài viết (`/blog`).
+- Tự động tạo trang chi tiết bài viết (`/blog/[slug]`).
 
-## Cach tao bai viet moi
+## Cách tạo bài viết mới
 
-1. Tao file moi trong `content/posts`, vi du `2026-03-04-bai-moi.md`.
-2. Them frontmatter (`title`, `summary`, `date`, `tags`).
-3. Push len GitHub, Cloudflare Pages se build va publish ban moi.
+1. Tạo file mới trong `content/posts`, ví dụ `2026-03-04-bai-moi.md`.
+2. Thêm frontmatter (`title`, `summary`, `date`, `tags`).
+3. Push lên GitHub, Cloudflare Pages sẽ build và publish bản mới.
 
-## Ghi chu
+## Chèn ảnh vào bài viết
 
-Neu ban muon an bai viet trong qua trinh soan thao, dat:
+1. Đặt ảnh vào thư mục `public/images/posts/<slug-bai-viet>/`.
+2. Chèn ảnh trong Markdown:
+
+```md
+![Mô tả ảnh](/images/posts/2026-03-03-khoi-tao-blog/anh-minh-hoa.png)
+```
+
+## Ghi chú
+
+Nếu bạn muốn ẩn bài viết trong quá trình soạn thảo, đặt:
 
 ```yaml
 draft: true

@@ -1,20 +1,20 @@
 # dungca-blog
 
-Bo khung blog su dung Next.js (App Router) de:
+Bộ khung blog sử dụng Next.js (App Router) để:
 
-- Viet bai bang Markdown trong `content/posts/`
-- Viet trang demo du an trong `content/projects/`
-- Tu dong hien thi repo AI tren GitHub `dungca1512`
-- Build static (`output: "export"`) de deploy len Cloudflare Pages
+- Viết bài bằng Markdown trong `content/posts/`
+- Viết trang demo dự án trong `content/projects/`
+- Tự động hiển thị repo AI trên GitHub `dungca1512`
+- Build static (`output: "export"`) để deploy lên Cloudflare Pages
 
-## 1) Chay local
+## 1) Chạy local
 
 ```bash
 npm install
 npm run dev
 ```
 
-## 2) Cau truc thu muc noi dung
+## 2) Cấu trúc thư mục nội dung
 
 ```text
 content/
@@ -27,15 +27,15 @@ content/
     featured-repos.json
 ```
 
-## 3) Viet bai blog Markdown
+## 3) Viết bài blog Markdown
 
-1. Tao file moi trong `content/posts/` voi ten dang `slug.md`.
-2. Khai bao frontmatter:
+1. Tạo file mới trong `content/posts/` với tên dạng `slug.md`.
+2. Khai báo frontmatter:
 
 ```yaml
 ---
-title: "Tieu de"
-summary: "Mo ta ngan"
+title: "Tiêu đề"
+summary: "Mô tả ngắn"
 date: "2026-03-03"
 tags:
   - nextjs
@@ -43,18 +43,31 @@ tags:
 ---
 ```
 
-3. Viet noi dung Markdown ben duoi.
-4. Trang se xuat hien tai:
-   - Danh sach: `/blog`
-   - Chi tiet: `/blog/[slug]`
+3. Viết nội dung Markdown bên dưới.
+4. Trang sẽ xuất hiện tại:
+   - Danh sách: `/blog`
+   - Chi tiết: `/blog/[slug]`
 
-Neu chua muon publish, them `draft: true`.
+Nếu chưa muốn publish, thêm `draft: true`.
 
-## 4) Demo AI repos tu GitHub
+## 4) Upload ảnh vào bài viết
 
-- Trang `/projects` gom:
-  - Demo viet tay bang Markdown (`content/projects/*.md`)
-  - Repo AI tu dong lay tu GitHub
+1. Tạo thư mục ảnh theo slug bài viết, ví dụ:
+   `public/images/posts/2026-03-03-khoi-tao-blog/`
+2. Đặt ảnh vào thư mục đó.
+3. Chèn trong Markdown:
+
+```md
+![Mô tả ảnh](/images/posts/2026-03-03-khoi-tao-blog/anh-minh-hoa.png)
+```
+
+Ảnh sẽ được build cùng site và hoạt động trực tiếp trên Cloudflare Pages.
+
+## 5) Demo AI repos từ GitHub
+
+- Trang `/projects` gồm:
+  - Demo viết tay bằng Markdown (`content/projects/*.md`)
+  - Repo AI tự động lấy từ GitHub
 
 - File `content/projects/featured-repos.json`:
 
@@ -65,21 +78,21 @@ Neu chua muon publish, them `draft: true`.
 }
 ```
 
-`featured` la danh sach repo muon ep hien thi (ke ca khi ten/mo ta khong match bo loc AI).
+`featured` là danh sách repo muốn ép hiển thị (kể cả khi tên/mô tả không match bộ lọc AI).
 
-## 5) Deploy Cloudflare Pages (Git integration)
+## 6) Deploy Cloudflare Pages (Git integration)
 
-Ket noi repo GitHub voi Cloudflare Pages, sau do dung:
+Kết nối repo GitHub với Cloudflare Pages, sau đó dùng:
 
-- Framework preset: `Next.js (Static HTML Export)` hoac `None`
+- Framework preset: `Next.js (Static HTML Export)` hoặc `None`
 - Build command: `npm run build`
 - Build output directory: `out`
 - Node.js version: `20`
 
-Moi lan push len nhanh da ket noi, Cloudflare se tu build va deploy.
+Mỗi lần push lên nhánh đã kết nối, Cloudflare sẽ tự build và deploy.
 
-## 6) Bien moi truong khuyen nghi
+## 7) Biến môi trường khuyến nghị
 
-- `GITHUB_TOKEN` (optional): tang han muc goi GitHub API khi build.
+- `GITHUB_TOKEN` (optional): tăng hạn mức gọi GitHub API khi build.
 
-Khong co token van build duoc, nhung co the bi gioi han request neu deploy nhieu lan lien tiep.
+Không có token vẫn build được, nhưng có thể bị giới hạn request nếu deploy nhiều lần liên tiếp.

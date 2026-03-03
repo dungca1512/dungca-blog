@@ -5,7 +5,7 @@ import { getAllPosts } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Danh sach bai viet Markdown.",
+  description: "Danh sách bài viết Markdown.",
 };
 
 export default async function BlogPage() {
