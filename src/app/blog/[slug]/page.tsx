@@ -90,7 +90,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <section className="article-center section-stack">
         <Link className="back-link" href="/blog">
-          Quay lại danh sách blog
+          Quay lại blog
         </Link>
 
         <header className="section-stack reading-header">

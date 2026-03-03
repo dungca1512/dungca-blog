@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Noto_Sans, Noto_Serif } from "next/font/google";
 import Link from "next/link";
 
+import { TopSearch } from "@/components/top-search";
+import { getAllPosts } from "@/lib/content";
+
 import "./globals.css";
 
 const fontUi = Noto_Sans({
@@ -25,11 +28,13 @@ export const metadata: Metadata = {
     "Blog AI/ML Engineer của Dũng: hệ thống LLM production, research agent, ASR và ghi chú machine learning.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const posts = await getAllPosts();
+
   return (
     <html lang="vi">
       <body className={`${fontUi.variable} ${fontSerif.variable}`}>
@@ -42,15 +47,7 @@ export default function RootLayout({
               <Link className="topbar-brand" href="/">
                 Blog của Dũng
               </Link>
-              <label className="topbar-search" htmlFor="search-blog">
-                <span>⌕</span>
-                <input
-                  id="search-blog"
-                  placeholder="Tìm kiếm ghi chú, ý tưởng và bài ML"
-                  readOnly
-                  type="text"
-                />
-              </label>
+              <TopSearch posts={posts} />
             </div>
 
             <div className="topbar-right">
