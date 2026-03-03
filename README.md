@@ -14,6 +14,16 @@ npm install
 npm run dev
 ```
 
+## Tài liệu chi tiết
+
+Tài liệu tách riêng trong thư mục [docs](./docs/README.md):
+
+- Cài đặt/chạy local
+- Viết bài Markdown
+- Chèn ảnh trong bài viết
+- Triển khai Cloudflare Pages
+- CI/CD với GitHub Actions
+
 ## 2) Cấu trúc thư mục nội dung
 
 ```text
