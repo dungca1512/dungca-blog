@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# dungca-blog
 
-## Getting Started
+Bo khung blog su dung Next.js (App Router) de:
 
-First, run the development server:
+- Viet bai bang Markdown trong `content/posts/`
+- Viet trang demo du an trong `content/projects/`
+- Tu dong hien thi repo AI tren GitHub `dungca1512`
+- Build static (`output: "export"`) de deploy len Cloudflare Pages
+
+## 1) Chay local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 2) Cau truc thu muc noi dung
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+content/
+  posts/
+    2026-03-03-khoi-tao-blog.md
+    _template.md
+  projects/
+    2026-03-03-demo-ai-local.md
+    _template.md
+    featured-repos.json
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 3) Viet bai blog Markdown
 
-## Learn More
+1. Tao file moi trong `content/posts/` voi ten dang `slug.md`.
+2. Khai bao frontmatter:
 
-To learn more about Next.js, take a look at the following resources:
+```yaml
+---
+title: "Tieu de"
+summary: "Mo ta ngan"
+date: "2026-03-03"
+tags:
+  - nextjs
+  - markdown
+---
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Viet noi dung Markdown ben duoi.
+4. Trang se xuat hien tai:
+   - Danh sach: `/blog`
+   - Chi tiet: `/blog/[slug]`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Neu chua muon publish, them `draft: true`.
 
-## Deploy on Vercel
+## 4) Demo AI repos tu GitHub
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Trang `/projects` gom:
+  - Demo viet tay bang Markdown (`content/projects/*.md`)
+  - Repo AI tu dong lay tu GitHub
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- File `content/projects/featured-repos.json`:
+
+```json
+{
+  "githubUser": "dungca1512",
+  "featured": ["ten-repo-uu-tien"]
+}
+```
+
+`featured` la danh sach repo muon ep hien thi (ke ca khi ten/mo ta khong match bo loc AI).
+
+## 5) Deploy Cloudflare Pages (Git integration)
+
+Ket noi repo GitHub voi Cloudflare Pages, sau do dung:
+
+- Framework preset: `Next.js (Static HTML Export)` hoac `None`
+- Build command: `npm run build`
+- Build output directory: `out`
+- Node.js version: `20`
+
+Moi lan push len nhanh da ket noi, Cloudflare se tu build va deploy.
+
+## 6) Bien moi truong khuyen nghi
+
+- `GITHUB_TOKEN` (optional): tang han muc goi GitHub API khi build.
+
+Khong co token van build duoc, nhung co the bi gioi han request neu deploy nhieu lan lien tiep.

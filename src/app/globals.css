@@ -1,26 +1,248 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --border: #dbe4ef;
+  --muted: #475569;
+  --link: #0f766e;
+  --tag-bg: #e2e8f0;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b1220;
+    --foreground: #e2e8f0;
+    --card: #111c2d;
+    --border: #253449;
+    --muted: #9fb0c8;
+    --link: #2dd4bf;
+    --tag-bg: #243348;
   }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--link);
+}
+
+.site-shell {
+  margin: 0 auto;
+  max-width: 980px;
+  padding: 24px 18px 48px;
+}
+
+.site-header {
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+}
+
+.brand {
+  color: var(--foreground);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.nav-link {
+  color: var(--muted);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.section-stack {
+  display: grid;
+  gap: 20px;
+}
+
+.page-title {
+  font-size: clamp(1.8rem, 4vw, 2.3rem);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.page-intro {
+  color: var(--muted);
+  margin: 0;
+}
+
+.card-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.card h2 {
+  margin: 6px 0 8px;
+}
+
+.card p {
+  margin: 8px 0;
+}
+
+.meta-line {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.tag {
+  background: var(--tag-bg);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
+.empty-box {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  margin: 0;
+  padding: 16px;
+}
+
+.back-link {
+  font-weight: 500;
+}
+
+.path-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.path-list li {
+  margin: 4px 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.action-link {
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--foreground);
+  display: inline-flex;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 7px 11px;
+  text-decoration: none;
+}
+
+.action-link:hover {
+  border-color: var(--link);
+  text-decoration: none;
+}
+
+.repo-stats {
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.markdown-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.markdown-content > *:first-child {
+  margin-top: 0;
+}
+
+.markdown-content > *:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  line-height: 1.3;
+  margin-top: 22px;
+}
+
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol {
+  margin: 10px 0;
+}
+
+.markdown-content pre {
+  background: #0f172a;
+  border-radius: 10px;
+  color: #e2e8f0;
+  overflow-x: auto;
+  padding: 12px;
+}
+
+.markdown-content code {
+  background: var(--tag-bg);
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  padding: 2px 4px;
+}
+
+.markdown-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
 }
