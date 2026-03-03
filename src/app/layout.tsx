@@ -20,33 +20,60 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body>
-        <div className="site-shell">
-          <header className="site-header">
-            <div className="brand-wrap">
-              <Link className="brand" href="/">
+        <header className="topbar">
+          <div className="topbar-inner">
+            <div className="topbar-left">
+              <button aria-label="Open navigation" className="icon-btn" type="button">
+                ☰
+              </button>
+              <Link className="topbar-brand" href="/">
                 Cong Anh Dung
               </Link>
-              <p className="brand-subtitle">AI/ML Engineer - Hanoi, Vietnam</p>
+              <label className="topbar-search" htmlFor="search-blog">
+                <span>⌕</span>
+                <input
+                  id="search-blog"
+                  placeholder="Search notes, ideas, and ML posts"
+                  readOnly
+                  type="text"
+                />
+              </label>
             </div>
 
-            <nav className="site-nav">
-              <Link className="nav-link" href="/blog">
-                Blog
-              </Link>
-              <Link className="nav-link" href="/projects">
+            <div className="topbar-right">
+              <a
+                className="topbar-link"
+                href="https://dungca1512.github.io/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Portfolio
+              </a>
+              <Link className="topbar-link" href="/projects">
                 AI Demos
               </Link>
               <a
-                className="nav-link"
+                className="topbar-pill"
+                href="mailto:dungca1512@gmail.com"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Contact
+              </a>
+              <a
+                aria-label="GitHub profile"
+                className="avatar-dot"
                 href="https://github.com/dungca1512"
                 rel="noreferrer"
                 target="_blank"
               >
-                GitHub
+                CA
               </a>
-            </nav>
-          </header>
+            </div>
+          </div>
+        </header>
 
+        <div className="site-shell">
           {children}
         </div>
       </body>
