@@ -1,4 +1,10 @@
 {
   "githubUser": "dungca1512",
-  "featured": []
+  "featured": [
+    "ai-gateway",
+    "research-agent",
+    "whisper-finetune-ja",
+    "whisper-finetune-ja-train",
+    "newspulse-reco-engine"
+  ]
 }

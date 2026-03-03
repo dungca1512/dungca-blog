@@ -5,11 +5,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Dungca Blog",
-    template: "%s | Dungca Blog",
+    default: "Cong Anh Dung Blog",
+    template: "%s | Cong Anh Dung Blog",
   },
   description:
-    "Blog viet bang Markdown va trang demo cac du an AI tu GitHub dungca1512.",
+    "AI/ML Engineer blog by Cong Anh Dung: production LLM systems, research agents, ASR, and ML notes.",
 };
 
 export default function RootLayout({
@@ -24,9 +24,9 @@ export default function RootLayout({
           <header className="site-header">
             <div className="brand-wrap">
               <Link className="brand" href="/">
-                Dungca Blog
+                Cong Anh Dung
               </Link>
-              <p className="brand-subtitle">Thoughtful notes on code, AI, and building.</p>
+              <p className="brand-subtitle">AI/ML Engineer - Hanoi, Vietnam</p>
             </div>
 
             <nav className="site-nav">
