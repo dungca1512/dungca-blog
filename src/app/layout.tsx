@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Blog của Dũng",
   },
   description:
-    "Blog AI/ML Engineer của Dũng: hệ thống LLM production, research agent, ASR và ghi chú machine learning.",
+    "Blog của Dũng — AI/ML Systems Architect: hạ tầng AI, Kubernetes/GKE, MLOps, ML serving (ASR, TTS, chấm phát âm, embedding) và ghi chú machine learning.",
 };
 
 export default async function RootLayout({
