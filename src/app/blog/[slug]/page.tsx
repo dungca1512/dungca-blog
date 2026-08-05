@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { getAllPosts, getPostBySlug, getPostSlugs } from "@/lib/content";
 import { formatDate } from "@/lib/format";
+import { PORTFOLIO_URL, SITE_NAME } from "@/lib/site";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -37,9 +38,29 @@ export async function generateMetadata({
     };
   }
 
+  const path = `/blog/${post.slug}/`;
+
   return {
     title: post.title,
     description: post.summary,
+    alternates: {
+      canonical: path,
+    },
+    openGraph: {
+      type: "article",
+      locale: "vi_VN",
+      siteName: SITE_NAME,
+      url: path,
+      title: post.title,
+      description: post.summary,
+      publishedTime: post.date,
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary,
+    },
   };
 }
 
@@ -152,7 +173,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <Link href="/projects">AI Demos</Link>
             </li>
             <li>
-              <a href="https://dungca1512.github.io/" rel="noreferrer" target="_blank">
+              <a href={PORTFOLIO_URL} rel="noreferrer" target="_blank">
                 Portfolio
               </a>
             </li>

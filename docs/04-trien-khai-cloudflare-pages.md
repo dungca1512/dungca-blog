@@ -1,5 +1,16 @@
 # Triển khai Cloudflare Pages
 
+## 0) Domain production
+
+- Blog: <https://blog-dungca.ai-innovation-homelab.org>
+- Portfolio: <https://portfolio-dungca.ai-innovation-homelab.org>
+
+Cả hai chạy dưới domain `ai-innovation-homelab.org` quản lý bởi Cloudflare.
+
+URL blog được khai báo một chỗ duy nhất tại `src/lib/site.ts` (`SITE_URL`) và dùng lại cho
+`metadataBase`, canonical, Open Graph, `sitemap.xml` và `robots.txt`. Nếu đổi domain, chỉ cần
+sửa file đó.
+
 ## 1) Kết nối repo GitHub
 
 1. Vào Cloudflare Pages.
@@ -22,7 +33,14 @@
 - Mỗi lần push lên branch đã kết nối (thường là `main`), Cloudflare tự chạy build/deploy.
 - Nếu gặp lỗi tạm thời kiểu `internal error` phía Cloudflare sau bước upload file, thường chỉ cần `Retry deployment`.
 
-## 5) Checklist khi deploy lỗi
+## 5) Custom domain
+
+1. Vào project trên Cloudflare Pages → `Custom domains` → `Set up a custom domain`.
+2. Nhập `blog-dungca.ai-innovation-homelab.org` (DNS trong cùng account nên Cloudflare tự tạo record `CNAME`).
+3. Chờ trạng thái `Active`, sau đó kiểm tra `https://blog-dungca.ai-innovation-homelab.org/sitemap.xml`
+   và `/robots.txt` trả về domain đúng.
+
+## 6) Checklist khi deploy lỗi
 
 1. Kiểm tra workflow CI trên GitHub có pass không.
 2. Chạy local `npm run lint && npm run build`.

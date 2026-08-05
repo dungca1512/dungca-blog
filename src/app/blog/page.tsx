@@ -6,6 +6,9 @@ import { getAllPosts } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Blog",
   description: "Danh sách bài viết Markdown.",
+  alternates: {
+    canonical: "/blog/",
+  },
 };
 
 export default async function BlogPage() {

@@ -1,5 +1,8 @@
 # dungca-blog
 
+- Blog: <https://blog-dungca.ai-innovation-homelab.org>
+- Portfolio: <https://portfolio-dungca.ai-innovation-homelab.org>
+
 Bộ khung blog sử dụng Next.js (App Router) để:
 
 - Viết bài bằng Markdown trong `content/posts/`
@@ -100,6 +103,10 @@ Kết nối repo GitHub với Cloudflare Pages, sau đó dùng:
 - Node.js version: `20`
 
 Mỗi lần push lên nhánh đã kết nối, Cloudflare sẽ tự build và deploy.
+
+Custom domain: `blog-dungca.ai-innovation-homelab.org`. URL này khai báo tại
+[src/lib/site.ts](./src/lib/site.ts) (`SITE_URL`) và được dùng cho `metadataBase`, canonical,
+Open Graph, `sitemap.xml`, `robots.txt` — đổi domain thì chỉ sửa một chỗ đó.
 
 ## 7) Biến môi trường khuyến nghị
 

@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "AI Demos",
   description:
     "Demo dự án viết bằng Markdown và danh sách repo AI lấy từ GitHub.",
+  alternates: {
+    canonical: "/projects/",
+  },
 };
 
 export default async function ProjectsPage() {

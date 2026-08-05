@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { PostListItem } from "@/lib/content";
 import { formatDate } from "@/lib/format";
+import { GITHUB_URL, PORTFOLIO_URL } from "@/lib/site";
 
 type BlogFeedMode = "home" | "blog";
 
@@ -57,8 +58,8 @@ const LEFT_MENU: LeftMenuItem[] = [
   { label: "Trang chủ", href: "/" },
   { label: "Blog", href: "/blog" },
   { label: "AI Demos", href: "/projects" },
-  { label: "Portfolio", href: "https://dungca1512.github.io/", external: true },
-  { label: "GitHub", href: "https://github.com/dungca1512", external: true },
+  { label: "Portfolio", href: PORTFOLIO_URL, external: true },
+  { label: "GitHub", href: GITHUB_URL, external: true },
 ];
 
 const STUDY_LINKS = [
@@ -80,12 +81,12 @@ const CONNECT_LINKS = [
   {
     name: "Portfolio cá nhân",
     role: "Dự án, kinh nghiệm, hành trình nghề nghiệp",
-    href: "https://dungca1512.github.io/",
+    href: PORTFOLIO_URL,
   },
   {
     name: "GitHub dungca1512",
     role: "Mã nguồn và demo AI",
-    href: "https://github.com/dungca1512",
+    href: GITHUB_URL,
   },
   {
     name: "LinkedIn",
@@ -177,7 +178,7 @@ export function BlogFeed({ mode, posts }: BlogFeedProps) {
               </Link>
               <a
                 className="story-link-pill"
-                href="https://dungca1512.github.io/"
+                href={PORTFOLIO_URL}
                 rel="noreferrer"
                 target="_blank"
               >

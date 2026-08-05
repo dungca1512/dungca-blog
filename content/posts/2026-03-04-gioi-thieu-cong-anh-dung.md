@@ -19,7 +19,7 @@ Tôi là **AI/ML Systems Architect** (Hà Nội, Việt Nam), sở hữu hạ t�
 - ML serving & MLOps (ASR, TTS, pronunciation scoring, embedding)
 - Streaming & data infrastructure
 
-Định hướng **CLI-first**, **tối ưu chi phí**, và ra quyết định theo **framework**. Thông tin này được đồng bộ theo portfolio `dungca1512.github.io` và GitHub `dungca1512`.
+Định hướng **CLI-first**, **tối ưu chi phí**, và ra quyết định theo **framework**. Thông tin này được đồng bộ theo portfolio `portfolio-dungca.ai-innovation-homelab.org` và GitHub `dungca1512`.
 
 ## Tôi đang xây dựng gì?
 

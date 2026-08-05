@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FloatingNavControls } from "@/components/floating-nav-controls";
 import { TopSearch } from "@/components/top-search";
 import { getAllPosts } from "@/lib/content";
+import { PORTFOLIO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 
@@ -20,13 +21,32 @@ const fontSerif = Noto_Serif({
   display: "swap",
 });
 
+const siteDescription =
+  "Blog của Dũng — AI/ML Systems Architect: hạ tầng AI, Kubernetes/GKE, MLOps, ML serving (ASR, TTS, chấm phát âm, embedding) và ghi chú machine learning.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Blog của Dũng",
-    template: "%s | Blog của Dũng",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Blog của Dũng — AI/ML Systems Architect: hạ tầng AI, Kubernetes/GKE, MLOps, ML serving (ASR, TTS, chấm phát âm, embedding) và ghi chú machine learning.",
+  description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    siteName: SITE_NAME,
+    url: SITE_URL,
+    title: SITE_NAME,
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: siteDescription,
+  },
 };
 
 export default async function RootLayout({
@@ -57,7 +77,7 @@ export default async function RootLayout({
               </Link>
               <a
                 className="topbar-link"
-                href="https://dungca1512.github.io/"
+                href={PORTFOLIO_URL}
                 rel="noreferrer"
                 target="_blank"
               >
