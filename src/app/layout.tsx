@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FloatingNavControls } from "@/components/floating-nav-controls";
 import { TopSearch } from "@/components/top-search";
 import { getAllPosts } from "@/lib/content";
-import { PORTFOLIO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
+import { CV_URL, PORTFOLIO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 
@@ -82,6 +82,14 @@ export default async function RootLayout({
                 target="_blank"
               >
                 Portfolio
+              </a>
+              <a
+                className="topbar-link"
+                href={CV_URL}
+                rel="noreferrer"
+                target="_blank"
+              >
+                CV
               </a>
               <a
                 className="topbar-pill"

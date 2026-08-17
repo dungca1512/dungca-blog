@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import type { PostListItem } from "@/lib/content";
 import { formatDate } from "@/lib/format";
-import { GITHUB_URL, PORTFOLIO_URL } from "@/lib/site";
+import { CV_URL, GITHUB_URL, PORTFOLIO_URL } from "@/lib/site";
 
 type BlogFeedMode = "home" | "blog";
 
@@ -59,6 +59,7 @@ const LEFT_MENU: LeftMenuItem[] = [
   { label: "Blog", href: "/blog" },
   { label: "AI Demos", href: "/projects" },
   { label: "Portfolio", href: PORTFOLIO_URL, external: true },
+  { label: "Tải CV", href: CV_URL, external: true },
   { label: "GitHub", href: GITHUB_URL, external: true },
 ];
 
@@ -82,6 +83,11 @@ const CONNECT_LINKS = [
     name: "Portfolio cá nhân",
     role: "Dự án, kinh nghiệm, hành trình nghề nghiệp",
     href: PORTFOLIO_URL,
+  },
+  {
+    name: "CV (PDF)",
+    role: "Bản CV mới nhất, cập nhật cùng portfolio",
+    href: CV_URL,
   },
   {
     name: "GitHub dungca1512",
