@@ -93,7 +93,7 @@ export default async function RootLayout({
               </a>
               <a
                 className="topbar-pill"
-                href="mailto:dungca1512@gmail.com"
+                href="mailto:dungca@ai-innovation-homelab.org"
                 rel="noreferrer"
                 target="_blank"
               >

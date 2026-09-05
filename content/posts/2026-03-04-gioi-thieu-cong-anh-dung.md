@@ -81,4 +81,4 @@ Blog này sẽ tập trung vào 2 nhóm bài:
 - ML cơ bản (để học đúng nền tảng)
 - AI infrastructure & MLOps (để đưa mô hình vào hệ thống thật, chạy ổn định và tối ưu chi phí)
 
-Nếu bạn muốn trao đổi công việc/hợp tác: `dungca1512@gmail.com`.
+Nếu bạn muốn trao đổi công việc/hợp tác: `dungca@ai-innovation-homelab.org`.
