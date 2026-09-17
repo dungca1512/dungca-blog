@@ -25,4 +25,17 @@ describe("chuyển theme", () => {
   it("nút có nhãn cho trình đọc màn hình", () => {
     expect(toggle).toContain("aria-label");
   });
+
+  it("nút KHÔNG dùng suppressHydrationWarning", () => {
+    /* Đã đo bằng trình duyệt: cờ này khiến React giữ nguyên HTML server, nên
+     * ở chế độ tối icon và aria-label kẹt ngược vĩnh viễn. Giữ test này để
+     * không ai vô tình đặt lại. */
+    expect(toggle).not.toContain("suppressHydrationWarning");
+  });
+
+  it("nút lấy theme qua useSyncExternalStore", () => {
+    /* useState + khởi tạo lười sẽ lệch giữa server và client. Hook này có
+     * getServerSnapshot riêng nên hydrate khớp rồi tự render lại đúng. */
+    expect(toggle).toContain("useSyncExternalStore");
+  });
 });
