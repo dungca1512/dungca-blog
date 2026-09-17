@@ -9,6 +9,14 @@ export const dynamic = "force-dynamic";
  * thứ không nên để hở. */
 export async function POST(request: Request) {
   const response = NextResponse.redirect(new URL("/", request.url), 303);
-  response.cookies.set(SESSION_COOKIE_NAME, "", { path: "/", maxAge: 0 });
+  /* Cùng bộ cờ với lúc đặt ở callback — lệch cờ giữa lúc đặt và lúc xoá là
+   * một câu hỏi "sao chỗ này khác" cho người đọc sau, dù xoá vẫn xoá được. */
+  response.cookies.set(SESSION_COOKIE_NAME, "", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
   return response;
 }
