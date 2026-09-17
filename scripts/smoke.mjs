@@ -7,7 +7,7 @@ const ROUTES = [
   "/",
   "/blog/",
   "/projects/",
-  "/blog/bai-thu-nghiem/",
+  "/blog/2026-03-03-khoi-tao-blog/",
   "/sitemap.xml",
   "/robots.txt",
 ];
