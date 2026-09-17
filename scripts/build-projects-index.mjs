@@ -6,7 +6,11 @@
    src/lib/projects-index.generated.ts — một module thuần dữ liệu, không đụng
    node:fs, sitemap import được an toàn.
 
-   Chạy lại mỗi khi thêm/bớt/đổi ngày một project:
+   Script này KHÔNG tự chạy lúc build — phải gõ tay, hoặc để `npm run build`
+   gọi qua hook `prebuild`. Tấm lưới cho chuyện quên chạy là
+   tests/projects-index.test.ts, và CI chạy `npm test`.
+
+   Chạy lại mỗi khi thêm/bớt/đổi ngày hay đổi `published` một project:
      node scripts/build-projects-index.mjs */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -24,11 +28,8 @@ function asString(value, fallback = "") {
   return typeof value === "string" ? value.trim() : fallback;
 }
 
-function normalizeDate(value) {
-  const raw = asString(value);
-  if (!raw) return "";
-  const date = new Date(raw);
-  return Number.isNaN(date.getTime()) ? raw : date.toISOString().slice(0, 10);
+function asBoolean(value, fallback) {
+  return typeof value === "boolean" ? value : fallback;
 }
 
 async function buildIndex() {
@@ -42,9 +43,19 @@ async function buildIndex() {
   for (const file of files) {
     const source = await fs.readFile(path.join(PROJECTS_DIR, file), "utf8");
     const parsed = matter(source);
+
+    /* Phải khớp ĐÚNG luật lọc của getAllProjects (src/lib/projects.ts): bỏ
+       project `published: false`. Lệch luật ở đây nghĩa là sitemap quảng cáo
+       một URL mà /projects/<slug>/ trả 404. */
+    if (!asBoolean(parsed.data.published, true)) {
+      continue;
+    }
+
     items.push({
       slug: file.replace(/\.md$/i, ""),
-      date: normalizeDate(parsed.data.date),
+      // Lấy nguyên chuỗi như parseProjectMeta, đừng tự chuẩn hoá — lệch định
+      // dạng ở đây là lệch với lastModified mà getAllProjects sinh ra.
+      date: asString(parsed.data.date),
     });
   }
 

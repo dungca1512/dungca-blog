@@ -6,9 +6,11 @@ import { describe, it, expect } from "vitest";
  * `SQLITE_BUSY (extended: SQLITE_BUSY_RECOVERY)`. Cả một vòng làm việc bị
  * BLOCKED để tìm ra nguyên nhân này (xem task-7-brief-bo-sung-2.md). Cách
  * sửa là ép các route đọc D1 thành `force-dynamic` (render theo request,
- * không đụng build) và giữ `/blog/[slug]` ở ISR (`revalidate`, không có
- * `dynamic`) vì route đó vốn không có `generateStaticParams` nên không
- * prerender lúc build.
+ * không đụng build) và giữ `/blog/[slug]` ở ISR: `revalidate`, không có
+ * `dynamic`, cộng `generateStaticParams` trả MẢNG RỖNG. Mảng rỗng là mấu
+ * chốt — nó đăng ký route vào ISR mà không prerender bài nào, nên không đọc
+ * D1 lúc build. Thiếu hàm đó thì Next không coi route động là ISR và
+ * `revalidate` bên dưới chỉ là chữ trang trí.
  *
  * Nếu ai đó lỡ đổi một trong các chỉ thị dưới đây về lại tĩnh/ISR, test
  * này phải đỏ ngay — không được để quy tắc chỉ sống trong trí nhớ người. */

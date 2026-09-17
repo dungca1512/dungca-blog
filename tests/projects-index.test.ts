@@ -1,58 +1,46 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
 import { describe, it, expect } from "vitest";
 
+import { getAllProjects } from "@/lib/projects";
 import { PROJECT_INDEX } from "@/lib/projects-index.generated";
 
-const PROJECTS_DIR = path.join(process.cwd(), "content", "projects");
-
-/* Nếu ai đó thêm/xoá/đổi ngày một project mà quên chạy lại
- * scripts/build-projects-index.mjs, sitemap sẽ lặng lẽ thiếu URL — đúng lỗi
- * đã xảy ra thực tế. Test này đọc content/projects/ trực tiếp (project
- * `node`, có filesystem) và so với bundle đã nướng sẵn, để chênh lệch bị bắt
- * ở CI thay vì bị phát hiện trên production. */
-async function readActualProjects() {
-  const entries = await fs.readdir(PROJECTS_DIR, { withFileTypes: true });
-  const files = entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
-    .map((entry) => entry.name)
-    .filter((name) => !name.startsWith("_"));
-
-  const items = [];
-  for (const file of files) {
-    const source = await fs.readFile(path.join(PROJECTS_DIR, file), "utf8");
-    const parsed = matter(source);
-    const rawDate = typeof parsed.data.date === "string" ? parsed.data.date.trim() : "";
-    const date = rawDate
-      ? new Date(rawDate).toISOString().slice(0, 10)
-      : "";
-
-    items.push({ slug: file.replace(/\.md$/i, ""), date });
-  }
-
-  return items.sort((a, b) => a.slug.localeCompare(b.slug));
-}
-
+/* Sitemap render trong Worker, nơi không có filesystem, nên nó đọc
+ * PROJECT_INDEX đã nướng sẵn thay vì gọi getAllProjects(). Cái giá của việc
+ * đó: một bản sao có thể lệch khỏi bản gốc mà không ai biết — sitemap lặng
+ * lẽ thiếu URL, đúng lỗi đã xảy ra thật.
+ *
+ * Test này so bản sao với CHÍNH getAllProjects() chứ không dựng lại luật đọc
+ * file. Quan trọng: nếu chép lại luật lọc của script vào đây thì test chỉ
+ * khẳng định script bằng chính nó, và mọi lệch về ngữ nghĩa — ví dụ quên lọc
+ * `published: false` — sẽ lọt. Gọi thẳng bản gốc thì không lọt được.
+ *
+ * Test chạy ở project `node` nên getAllProjects() còn filesystem để đọc. */
 describe("projects-index.generated", () => {
-  it("khớp số lượng project thật trong content/projects/", async () => {
-    const actual = await readActualProjects();
-    expect(PROJECT_INDEX).toHaveLength(actual.length);
+  it("khớp tập slug với getAllProjects()", async () => {
+    const actual = await getAllProjects();
+
+    expect(PROJECT_INDEX.map((item) => item.slug).sort()).toEqual(
+      actual.map((project) => project.slug).sort(),
+    );
   });
 
-  it("khớp tập slug với content/projects/", async () => {
-    const actual = await readActualProjects();
-    const actualSlugs = actual.map((item) => item.slug).sort();
-    const indexSlugs = PROJECT_INDEX.map((item) => item.slug).sort();
-    expect(indexSlugs).toEqual(actualSlugs);
-  });
-
-  it("khớp date với frontmatter cho từng slug", async () => {
-    const actual = await readActualProjects();
-    const actualBySlug = new Map(actual.map((item) => [item.slug, item.date]));
+  it("khớp date với getAllProjects() cho từng slug", async () => {
+    const actual = await getAllProjects();
+    const dateBySlug = new Map(actual.map((p) => [p.slug, p.date]));
 
     for (const entry of PROJECT_INDEX) {
-      expect(entry.date).toBe(actualBySlug.get(entry.slug));
+      expect(entry.date).toBe(dateBySlug.get(entry.slug));
+    }
+  });
+
+  it("không liệt kê project published: false", async () => {
+    /* getAllProjects() đã lọc sẵn, nên phép so tập slug ở trên tự bắt được.
+     * Khẳng định lại ở đây để lý do tồn tại của luật lọc nằm trong tên test:
+     * một project chưa đăng mà lọt vào sitemap là URL dẫn tới 404. */
+    const actual = await getAllProjects();
+    const published = new Set(actual.map((p) => p.slug));
+
+    for (const entry of PROJECT_INDEX) {
+      expect(published.has(entry.slug)).toBe(true);
     }
   });
 });
