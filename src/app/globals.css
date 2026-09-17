@@ -1,32 +1,108 @@
 @import "tailwindcss";
 
+/* ───────────────────────────────────────────────────────────────────────────
+ * LỚP TOKEN
+ *
+ * Bê từ portfolio (dungca1512.github.io) để hai site cùng một ngôn ngữ thị
+ * giác. Hai tầng, cố ý:
+ *
+ *   --base-*   lớp thật, là thứ code mới (khu admin) phải dùng
+ *   --bg/--text/--accent…  lớp cầu nối, chỉ tồn tại để ~1200 dòng CSS cũ bên
+ *              dưới không phải viết lại. Code MỚI đừng dùng lớp này.
+ *
+ * Đây là file DUY NHẤT được phép chứa literal màu. scripts/check-no-hardcoded-
+ * colors.mjs chặn mọi file khác. Lý do: một hex nằm rải rác không lật theo
+ * theme, và không có gì cảnh báo bạn cả.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/* Tầng 1 — màu nguyên thuỷ. Không lật theo theme. */
 :root {
-  --bg: #f8f8f8;
-  --surface: #ffffff;
-  --surface-soft: #f3f3f3;
-  --border: #e6e6e6;
-  --text: #1f1f1f;
-  --text-soft: #666666;
-  --text-muted: #8a8a8a;
-  --accent: #1a8917;
-  --accent-dark: #156d12;
+  --base-palette-brand-500: #4e46b4;
+  --base-palette-accent-500: #40a69f;
+  --base-palette-neutral-0: #fff;
+  --base-palette-neutral-50: #f5f5f5;
+  --base-palette-neutral-100: #ebebeb;
+  --base-palette-neutral-200: #e2e2e2;
+  --base-palette-neutral-600: #595d62;
+  --base-palette-neutral-850: #1f1f1f;
+  --base-palette-neutral-950: #0b0b0b;
+  --base-palette-neutral-1000: #000;
+  --base-palette-red-500: #ff4e64;
+  --base-palette-green-600: #2e7d32;
+  --base-palette-yellow-400: #ffb319;
+
+  --base-radius-xs: 4px;
+  --base-radius-sm: 8px;
+  --base-radius-md: 12px;
+  --base-radius-lg: 16px;
+  --base-duration: 0.2s;
+  --base-duration-fast: 0.15s;
+  --base-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --base-shadow-raised: 0 4px 16px -4px #0000001f;
+  --base-shadow-overlay: 0 12px 32px -8px #00000029, 0 2px 8px -2px #00000014;
+}
+
+/* Tầng 2 — token ngữ nghĩa, SÁNG. */
+:root {
+  --base-background: var(--base-palette-neutral-50);
+  --base-surface: var(--base-palette-neutral-0);
+  --base-surface-muted: var(--base-palette-neutral-100);
+  --base-foreground: var(--base-palette-neutral-1000);
+  --base-muted-foreground: var(--base-palette-neutral-600);
+  --base-border: var(--base-palette-neutral-200);
+
+  /* KHÔNG phải brand-500 thô. Chữ trắng trên #4e46b4 chưa đạt AA; tối màu
+   * dọc theo chính hue của nó cho tới khi trắng vượt ngưỡng. Token này là nền
+   * của mọi nút đặc, nên sai ở đây là sai ở khắp nơi. */
+  --base-primary: color-mix(in srgb, var(--base-palette-brand-500) 86%, var(--base-palette-neutral-1000));
+  --base-primary-foreground: var(--base-palette-neutral-0);
+  --base-accent: var(--base-palette-accent-500);
+  --base-danger: var(--base-palette-red-500);
+  --base-success: var(--base-palette-green-600);
+  --base-warning: var(--base-palette-yellow-400);
+}
+
+/* Tầng 2 — token ngữ nghĩa, TỐI. Chỉ những token buộc phải lật mới có ở đây. */
+[data-theme="dark"] {
+  --base-background: var(--base-palette-neutral-950);
+  /* Bóng đổ không nâng được gì lên khỏi nền gần-đen, nên độ nổi đến từ việc
+   * surface sáng hơn thứ nó nằm trên. */
+  --base-surface: #191919;
+  --base-surface-muted: var(--base-palette-neutral-850);
+  /* KHÔNG dùng trắng tinh làm chữ trên nền gần-đen: 18:1 là chói mắt. */
+  --base-foreground: #ededed;
+  --base-muted-foreground: #9aa0a6;
+  --base-border: #ffffff1c;
+}
+
+/* Theo hệ thống khi người dùng chưa chọn gì. Script trong layout.tsx đặt
+ * data-theme="dark" trước khi trang vẽ, nên khối này chỉ là lưới đỡ cho
+ * trường hợp JS chưa chạy. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --base-background: var(--base-palette-neutral-950);
+    --base-surface: #191919;
+    --base-surface-muted: var(--base-palette-neutral-850);
+    --base-foreground: #ededed;
+    --base-muted-foreground: #9aa0a6;
+    --base-border: #ffffff1c;
+  }
+}
+
+/* Lớp cầu nối. Code mới đừng dùng — dùng --base-* ở trên. */
+:root {
+  --bg: var(--base-background);
+  --surface: var(--base-surface);
+  --surface-soft: var(--base-surface-muted);
+  --border: var(--base-border);
+  --text: var(--base-foreground);
+  --text-soft: var(--base-muted-foreground);
+  --text-muted: var(--base-muted-foreground);
+  --accent: var(--base-primary);
+  --accent-dark: color-mix(in srgb, var(--base-primary) 80%, var(--base-palette-neutral-1000));
   --font-ui: var(--font-ui-family), "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-display: var(--font-serif-family), Georgia, "Times New Roman", serif;
   --font-prose: var(--font-serif-family), Georgia, serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #101214;
-    --surface: #181a1d;
-    --surface-soft: #222428;
-    --border: #303236;
-    --text: #ececec;
-    --text-soft: #b8b8b8;
-    --text-muted: #8e8e8e;
-    --accent: #2fc94b;
-    --accent-dark: #25a43c;
-  }
 }
 
 * {
@@ -399,19 +475,15 @@ a {
 }
 
 .story-feature {
-  background: linear-gradient(135deg, var(--surface), #f2f8f3 85%);
+  /* Điểm dừng gradient pha theo --base-accent thay vì hex riêng cho từng theme,
+   * nên khối này tự lật sáng/tối theo token — không cần media query nữa. */
+  background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--base-accent) 18%, var(--base-surface-muted)) 85%);
   border: 1px solid var(--border);
   border-radius: 14px;
   display: grid;
   gap: 10px;
   margin-bottom: 10px;
   padding: 16px 18px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .story-feature {
-    background: linear-gradient(135deg, var(--surface), #1c261f 85%);
-  }
 }
 
 .story-feature-meta {

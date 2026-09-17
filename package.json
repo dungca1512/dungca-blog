@@ -14,7 +14,9 @@
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare populateCache local && wrangler dev --port 8788",
     "smoke": "node scripts/smoke.mjs",
-    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare populateCache remote && wrangler deploy"
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare populateCache remote && wrangler deploy",
+    "check:colors": "node scripts/check-no-hardcoded-colors.mjs",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run check:colors && npm run build"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
