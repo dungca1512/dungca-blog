@@ -1,5 +1,11 @@
 # dungca-blog
 
+> **Lưu ý (2026-09):** Bài viết giờ nằm trong **D1**, không còn đọc từ
+> `content/posts/`. Site chạy trên **Cloudflare Workers** (qua OpenNext),
+> không phải Cloudflare Pages. Phần còn lại của README này và
+> `docs/01`–`docs/05` vẫn mô tả luồng cũ (Markdown + Pages) — sẽ được viết
+> lại ở Kế hoạch B khi luồng đăng bài cuối cùng chốt xong.
+
 - Blog: <https://blog-dungca.ai-innovation-homelab.org>
 - Portfolio: <https://portfolio-dungca.ai-innovation-homelab.org>
 

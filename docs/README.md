@@ -1,5 +1,9 @@
 # Tài liệu vận hành blog
 
+> **Lưu ý (2026-09):** Bài viết giờ nằm trong D1, site chạy trên Cloudflare
+> Workers — các mục dưới đây mô tả luồng cũ (Markdown + Cloudflare Pages) và
+> sẽ được viết lại ở Kế hoạch B.
+
 Bộ tài liệu này tách riêng phần hướng dẫn triển khai và sử dụng blog Markdown.
 
 ## Danh mục
