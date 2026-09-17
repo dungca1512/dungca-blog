@@ -1,0 +1,76 @@
+name: Deploy
+
+on:
+  push:
+    branches: ["main"]
+  # Cho phép chạy tay khi cần deploy lại mà không có commit mới.
+  workflow_dispatch:
+
+# Hai lần đẩy liên tiếp không được deploy song song: bản cũ hơn có thể về đích
+# sau và ghi đè bản mới. Huỷ bản đang chạy khi có bản mới tới.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Ba cổng chất lượng chạy TRƯỚC khi chạm vào production. Chạy sau là
+      # phát hiện lỗi khi nó đã ở trên mạng.
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Check colors
+        run: npm run check:colors
+
+      # Migration chạy TRƯỚC deploy, không phải sau. Code mới đọc cột chưa tồn
+      # tại là mọi trang đổ; code cũ chạy với cột thừa thì không sao. Đây là lý
+      # do migration chỉ được phép CỘNG THÊM, không đổi tên, không xoá.
+      - name: Apply D1 migrations
+        run: npx wrangler d1 migrations apply dungca-blog --remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # build → populateCache → deploy, đúng thứ tự này. Bỏ populateCache là
+      # MỌI bài trả 404 kèm NoFallbackError trong khi log build vẫn xanh — đã
+      # xảy ra thật ở giai đoạn spike.
+      - name: Build
+        run: npx opennextjs-cloudflare build
+
+      - name: Populate cache
+        run: npx opennextjs-cloudflare populateCache remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # Bước quan trọng nhất của file này. "Deploy thành công" chỉ nói wrangler
+      # tải code lên được; nó không nói trang nào mở được. Smoke gọi vào tên
+      # miền thật và là thứ duy nhất ở đây kiểm chứng điều đó.
+      - name: Smoke test production
+        run: npm run smoke https://blog-dungca.ai-innovation-homelab.org

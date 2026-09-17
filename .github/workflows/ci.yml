@@ -25,6 +25,14 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Chặn literal màu lọt ra ngoài lớp token. Không có cổng này thì một hex
+      # lẻ nằm im trong component, không lật theo theme, và không ai biết.
+      - name: Check colors
+        run: npm run check:colors
+
       # Bộ test là tấm lưới duy nhất bắt được projects-index.generated.ts lệch
       # khỏi content/projects/. Thiếu bước này, lệch đó đi thẳng ra production
       # dưới dạng sitemap thiếu URL mà build vẫn xanh.

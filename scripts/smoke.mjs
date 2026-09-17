@@ -67,7 +67,31 @@ try {
   failed += 2;
 }
 
-const totalChecks = ROUTES.length + sitemapChecks;
+/* Khu quản trị phải ĐÓNG với người chưa đăng nhập. Đây là kiểm tra bảo mật
+   chạy trên production thật sau mỗi lần deploy — một middleware matcher viết
+   sai không kêu ở bất kỳ đâu khác. */
+{
+  const res = await fetch(`${base}/admin`, { redirect: "manual" });
+  /* 3xx = chuyển sang đăng nhập (đúng). 200 = trang quản trị mở toang. */
+  if (res.status >= 300 && res.status < 400) {
+    console.log(`✓ /admin — chuyển hướng ${res.status}, chưa đăng nhập không vào được`);
+  } else {
+    console.error(`✗ /admin — nhận ${res.status}, phải chuyển hướng sang đăng nhập`);
+    failed += 1;
+  }
+}
+
+{
+  const res = await fetch(`${base}/api/admin/posts`, { redirect: "manual" });
+  if (res.status === 401) {
+    console.log(`✓ /api/admin/posts — 401`);
+  } else {
+    console.error(`✗ /api/admin/posts — nhận ${res.status}, phải là 401`);
+    failed += 1;
+  }
+}
+
+const totalChecks = ROUTES.length + sitemapChecks + 2;
 
 if (failed > 0) {
   console.error(`\n${failed}/${totalChecks} phép kiểm hỏng.`);

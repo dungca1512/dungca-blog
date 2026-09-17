@@ -68,5 +68,12 @@
   ],
   "images": {
     "binding": "IMAGES"
+  },
+  // KHÔNG phải secret — đây là username GitHub công khai, và để nó ở đây thì
+  // đọc config là biết ai vào được admin. Ba thứ kia (GITHUB_CLIENT_ID,
+  // GITHUB_CLIENT_SECRET, SESSION_SECRET) là secret và chỉ nạp bằng
+  // `wrangler secret put`, tuyệt đối không viết vào file này.
+  "vars": {
+    "ADMIN_GITHUB_LOGIN": "dungca1512"
   }
 }

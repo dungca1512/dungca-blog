@@ -7,19 +7,22 @@ describe("toSlug", () => {
     expect(toSlug("Học máy cơ bản")).toBe("hoc-may-co-ban");
   });
 
-  it("xử lý được chữ đ", () => {
+  it("chuyển đ và Đ thành d", () => {
     // normalize("NFD") KHÔNG tách được đ/Đ — chúng là ký tự riêng, không
     // phải d kèm dấu. Chúng bị loại bỏ hoàn toàn bởi regex [^a-z0-9\s-].
-    // Hành vi thật: "Đường dẫn" -> "uong-dan" (không phải "ung-dan")
-    expect(toSlug("Đường dẫn")).toBe("uong-dan");
+    expect(toSlug("Đường dẫn")).toBe("duong-dan");
+    expect(toSlug("Cái đẹp của đường ống")).toBe("cai-dep-cua-duong-ong");
   });
 
   it("gộp khoảng trắng và gạch nối thừa", () => {
+    expect(toSlug("  Nhiều   khoảng —— trắng  ")).toBe("nhieu-khoang-trang");
     expect(toSlug("A   B -- C")).toBe("a-b-c");
   });
 
   it("bỏ ký tự không phải chữ số", () => {
     expect(toSlug("Next.js 16: có gì mới?")).toBe("nextjs-16-co-gi-moi");
+    expect(toSlug("— Mở đầu —")).toBe("mo-dau");
+    expect(toSlug("Kết thúc!")).toBe("ket-thuc");
   });
 
   it("trả chuỗi rỗng khi không còn ký tự dùng được", () => {
@@ -34,10 +37,10 @@ describe("buildArticleHtmlAndToc", () => {
     );
 
     expect(toc).toEqual([
-      { id: "mo-au", text: "Mở đầu", level: 2 },
+      { id: "mo-dau", text: "Mở đầu", level: 2 },
       { id: "chi-tiet", text: "Chi tiết", level: 3 },
     ]);
-    expect(htmlWithIds).toContain('<h2 id="mo-au" class="article-heading">');
+    expect(htmlWithIds).toContain('<h2 id="mo-dau" class="article-heading">');
   });
 
   it("không đụng tới h1 và h4", () => {

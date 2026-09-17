@@ -3,6 +3,7 @@ import { Noto_Sans, Noto_Serif } from "next/font/google";
 import Link from "next/link";
 
 import { FloatingNavControls } from "@/components/floating-nav-controls";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { TopSearch } from "@/components/top-search";
 import { CV_URL, PORTFOLIO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -54,7 +55,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    /* suppressHydrationWarning: script bên dưới sửa data-theme trước khi React
+     * hydrate, nên HTML server gửi xuống và DOM thật cố tình khác nhau ở đúng
+     * thuộc tính này. Không có cờ này là React kêu ầm mỗi lần tải. */
+    <html lang="vi" suppressHydrationWarning>
+      <head>
+        {/* Chạy đồng bộ, trước khi trình duyệt vẽ frame đầu. Đặt trong
+            useEffect thì người đọc ban đêm ăn một chớp trắng mỗi lần chuyển
+            trang. Giữ script này ngắn và không phụ thuộc gì. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(!t){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className={`${fontUi.variable} ${fontSerif.variable}`}>
         <header className="topbar">
           <div className="topbar-inner">
@@ -91,6 +105,7 @@ export default function RootLayout({
               >
                 CV
               </a>
+              <ThemeToggle />
               <a
                 className="topbar-pill"
                 href="mailto:dungca@ai-innovation-homelab.org"

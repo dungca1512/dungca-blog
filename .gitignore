@@ -49,3 +49,4 @@ next-env.d.ts
 # không gian làm việc tạm của agent (ledger, brief, gói review, worktree)
 /.superpowers/
 /.claude/worktrees/
+/.playwright-mcp/
