@@ -22,6 +22,15 @@
       "bucket_name": "dungca-blog-opennext-cache"
     }
   ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dungca-blog",
+      // Database chưa được tạo. Trước lần deploy đầu, chạy
+      // `npx wrangler d1 create dungca-blog` rồi dán database_id thật vào đây.
+      "database_id": "PLACEHOLDER-CHUA-TAO-XEM-COMMENT"
+    }
+  ],
   "images": {
     "binding": "IMAGES"
   }
