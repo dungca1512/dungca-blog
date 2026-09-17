@@ -14,7 +14,9 @@ export default defineConfig({
     cloudflareTest({
       miniflare: {
         compatibilityDate: "2026-03-01",
-        compatibilityFlags: ["nodejs_compat"],
+        // Phải khớp compatibility_flags trong wrangler.jsonc, nếu không test
+        // chạy trên runtime khác production.
+        compatibilityFlags: ["nodejs_compat", "global_fetch_strictly_public"],
         d1Databases: ["DB"],
         bindings: { TEST_MIGRATIONS: migrations },
       },
