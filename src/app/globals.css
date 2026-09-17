@@ -1305,3 +1305,16 @@ a {
 .admin-badge { padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; white-space: nowrap; }
 .admin-badge-published { background: color-mix(in srgb, var(--base-success) 18%, transparent); color: var(--base-success); }
 .admin-badge-draft { background: var(--base-surface-muted); color: var(--base-muted-foreground); }
+
+.editor { display: flex; flex-direction: column; gap: 16px; }
+.editor-fields { display: flex; flex-direction: column; gap: 12px; }
+.editor-label { display: flex; flex-direction: column; gap: 6px; color: var(--base-muted-foreground); font-size: 0.85rem; }
+.editor-input, .editor-body { width: 100%; padding: 10px 12px; border: 1px solid var(--base-border); border-radius: var(--base-radius-sm); background: var(--base-surface); color: var(--base-foreground); font-family: var(--font-ui); font-size: 16px; }
+.editor-input:focus, .editor-body:focus { outline: 2px solid var(--base-primary); outline-offset: 1px; }
+.editor-body { min-height: 55vh; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; line-height: 1.6; resize: vertical; }
+.editor-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--base-border); }
+.editor-tab { min-height: 44px; padding: 0 16px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--base-muted-foreground); font: inherit; cursor: pointer; }
+.editor-tab-active { border-bottom-color: var(--base-primary); color: var(--base-foreground); }
+.editor-preview { min-height: 55vh; padding: 16px; border: 1px solid var(--base-border); border-radius: var(--base-radius-sm); background: var(--base-surface); }
+.editor-actions { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--base-border); background: var(--base-background); }
+.editor-status { color: var(--base-muted-foreground); font-size: 0.85rem; }
