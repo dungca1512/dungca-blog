@@ -3,7 +3,10 @@
   "main": ".open-next/worker.js",
   "name": "dungca-blog",
   "compatibility_date": "2026-03-01",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
@@ -18,8 +21,18 @@
   ],
   "r2_buckets": [
     {
+      // Cache ISR. Adapter OpenNext sở hữu bucket này và tự dọn — đừng để
+      // thứ gì khác vào đây, và đừng đặt thêm binding thứ hai trỏ cùng chỗ
+      // (`wrangler r2 bucket create` tự thêm một cái, đã gỡ).
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
       "bucket_name": "dungca-blog-opennext-cache"
+    },
+    {
+      // Ảnh người dùng upload ở Kế hoạch B. Tách hẳn khỏi bucket cache:
+      // adapter dọn cache theo cách của nó, trộn chung là có ngày mất ảnh.
+      // Không đặt "remote": true — xem lý do ở binding DB bên dưới.
+      "binding": "BLOG_MEDIA",
+      "bucket_name": "blog-media"
     }
   ],
   "d1_databases": [
