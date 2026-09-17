@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getAllPosts, getPostBySlug, getPostSlugs } from "@/lib/content";
+import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { buildArticleHtmlAndToc } from "@/lib/article-toc";
 import { formatDate } from "@/lib/format";
 import { PORTFOLIO_URL, SITE_NAME } from "@/lib/site";
@@ -11,15 +11,12 @@ type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const dynamicParams = false;
-
-export async function generateStaticParams() {
-  const slugs = await getPostSlugs();
-
-  return slugs.map((slug) => ({
-    slug,
-  }));
-}
+/* Bài viết nằm trong D1, mà lúc `next build` không có binding nên không
+ * enumerate được. Trang render theo yêu cầu lần đầu rồi nằm trong cache ISR;
+ * lúc đăng bài, hành động publish gọi revalidatePath để đẩy bản mới lên.
+ * Con số 3600 là lưới an toàn phòng khi lời gọi revalidate thất bại, không
+ * phải cơ chế cập nhật chính. */
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

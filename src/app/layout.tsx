@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { FloatingNavControls } from "@/components/floating-nav-controls";
 import { TopSearch } from "@/components/top-search";
-import { getAllPosts } from "@/lib/content";
 import { CV_URL, PORTFOLIO_URL, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
@@ -49,13 +48,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const posts = await getAllPosts();
-
   return (
     <html lang="vi">
       <body className={`${fontUi.variable} ${fontSerif.variable}`}>
@@ -68,7 +65,10 @@ export default async function RootLayout({
               <Link className="topbar-brand" href="/">
                 Blog của Dũng
               </Link>
-              <TopSearch posts={posts} />
+              {/* Layout chạy trên mọi route, kể cả /projects/* vốn phải
+                  prerender lúc build, nên không được đụng D1 ở đây. TopSearch
+                  tự nạp chỉ mục qua /api/search-index khi được chạm tới. */}
+              <TopSearch />
             </div>
 
             <div className="topbar-right">

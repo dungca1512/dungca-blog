@@ -85,14 +85,19 @@ export async function findPublishedPost(
   };
 }
 
-function db(): D1Database {
-  return getCloudflareContext().env.DB as unknown as D1Database;
+/* async: true vì hàm này còn được gọi lúc `next build` prerender các trang
+ * tĩnh (home, /blog, layout). Lúc đó không có request thật nên bản đồng bộ
+ * của getCloudflareContext() sẽ ném lỗi; bản async dựng platform proxy đọc
+ * .wrangler/state cục bộ nên chạy được cả lúc build lẫn lúc có request. */
+async function db(): Promise<D1Database> {
+  const { env } = await getCloudflareContext({ async: true });
+  return env.DB;
 }
 
 export async function getAllPosts(): Promise<PostListItem[]> {
-  return listPublishedPosts(db());
+  return listPublishedPosts(await db());
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  return findPublishedPost(db(), slug);
+  return findPublishedPost(await db(), slug);
 }

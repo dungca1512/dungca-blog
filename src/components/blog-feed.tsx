@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { PostListItem } from "@/lib/content";
+import type { PostListItem } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
 import { CV_URL, GITHUB_URL, PORTFOLIO_URL } from "@/lib/site";
 
