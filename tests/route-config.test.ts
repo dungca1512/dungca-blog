@@ -40,4 +40,14 @@ describe("route-config: quy tắc không đọc D1 lúc build", () => {
     expect(postPage.revalidate).toBe(3600);
     expect((postPage as { dynamic?: unknown }).dynamic).toBeUndefined();
   });
+
+  /* `revalidate` một mình không tạo ra ISR: Next chỉ ghi route động vào
+   * dynamicRoutes của prerender-manifest khi route có generateStaticParams.
+   * Thiếu hàm này thì `revalidate = 3600` chỉ là một hằng số vô nghĩa và
+   * revalidatePath lúc publish bài không có đường cache nào để xoá — hai
+   * thứ phải đi cùng nhau nên phải được khẳng định cùng nhau. */
+  it("/blog/[slug] xuất generateStaticParams trả mảng rỗng (điều kiện để revalidate có tác dụng)", async () => {
+    expect(typeof postPage.generateStaticParams).toBe("function");
+    expect(await postPage.generateStaticParams!()).toEqual([]);
+  });
 });

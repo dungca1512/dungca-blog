@@ -18,6 +18,14 @@ type BlogPostPageProps = {
  * phải cơ chế cập nhật chính. */
 export const revalidate = 3600;
 
+/* Mảng rỗng: không prerender bài nào lúc build (đọc D1 lúc build là hỏng
+ * build — xem /api/search-index). Nhưng Next chỉ ghi route động vào ISR khi
+ * có hàm này, nên thiếu nó thì `revalidate` ở trên chỉ là chữ trang trí và
+ * `revalidatePath` sau này không có đường cache nào để xoá. */
+export async function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
