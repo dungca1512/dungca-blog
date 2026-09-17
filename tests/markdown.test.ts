@@ -16,4 +16,9 @@ describe("markdownToHtml", () => {
     expect(html).toContain("<code");
     expect(html).toContain("const x = 1;");
   });
+
+  it("lọc bỏ thẻ script (ranh giới tin cậy cho nội dung từ D1)", async () => {
+    const html = await markdownToHtml("<script>alert(1)</script>");
+    expect(html).not.toContain("<script");
+  });
 });
