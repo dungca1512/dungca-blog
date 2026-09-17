@@ -161,14 +161,22 @@ describe("ràng buộc không quan sát được từ hành vi", () => {
    * một ràng buộc không quan sát được từ bên ngoài. */
   const nguon = readFileSync("src/lib/session.ts", "utf8");
 
+  /* Bỏ comment trước khi quét. Không có bước này thì một comment cảnh báo
+   * "đừng viết === signature" lại làm chính test này đỏ — và cách rẻ nhất để
+   * làm nó xanh là xoá lời cảnh báo, tức là test phá đúng thứ nó định bảo vệ.
+   * Test canh mã, không canh câu chữ. */
+  const maNguonKhongComment = nguon
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "");
+
   it("so sánh chữ ký bằng crypto.subtle.verify", () => {
-    expect(nguon).toContain("crypto.subtle.verify");
+    expect(maNguonKhongComment).toContain("crypto.subtle.verify");
   });
 
   it("không so sánh chữ ký bằng toán tử bằng", () => {
-    /* Bắt `=== signature`, `!== signature`, `=== expected`... Không bắt
-     * phép so sánh chuẩn tắc hoá trong fromBase64Url vì vế phải là `value`. */
-    expect(nguon).not.toMatch(/[!=]==\s*signature\b/);
-    expect(nguon).not.toMatch(/\bsignature\s*[!=]==/);
+    /* Bắt `=== signature`, `!== signature`... Không bắt phép so sánh chuẩn
+     * tắc hoá trong fromBase64Url vì vế phải ở đó là `value`. */
+    expect(maNguonKhongComment).not.toMatch(/[!=]==\s*signature\b/);
+    expect(maNguonKhongComment).not.toMatch(/\bsignature\s*[!=]==/);
   });
 });

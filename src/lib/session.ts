@@ -103,9 +103,8 @@ export async function verifySession(
   if (!signatureBytes) return null;
 
   /* crypto.subtle.verify so sánh trong thời gian hằng định. Đừng thay bằng
-   * phép so sánh bằng tuyệt đối kiểu chuỗi (signHere so với signature) — so
-   * sánh chuỗi thoát sớm ở byte đầu khác nhau, và thời gian thoát đó rò rỉ
-   * chữ ký đúng từng byte một. */
+   * `signHere === signature` — so sánh chuỗi thoát sớm ở byte đầu khác nhau,
+   * và thời gian thoát đó rò rỉ chữ ký đúng từng byte một. */
   const valid = await crypto.subtle.verify(
     "HMAC",
     await hmacKey(secret),
