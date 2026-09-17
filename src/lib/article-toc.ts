@@ -50,10 +50,17 @@ export function stripHtml(value: string): string {
 export function toSlug(value: string): string {
   return value
     .toLowerCase()
+    /* đ là ký tự đơn trong Unicode, không phải d + dấu, nên NFD không tách
+     * nó ra và bước lọc ký tự lạ bên dưới xoá thẳng. Phải thay trước normalize
+     * để "Đăng bài" không thành "ang-bai". */
+    .replace(/đ/g, "d")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+    .replace(/-+/g, "-")
+    /* Sau khi xoá ký tự lạ, "— Mở đầu —" còn "- mo dau -". Không để slug
+     * bắt đầu/kết thúc bằng gạch nối vì đó là URL trông như lỗi. */
+    .replace(/^-|-$/g, "");
 }
