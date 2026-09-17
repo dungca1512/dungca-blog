@@ -11,10 +11,12 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  // Giữ URL *.workers.dev sống làm đường thoát hiểm. Khai báo "routes" mà
-  // không có dòng này thì wrangler TẮT workers.dev — lúc tên miền thật chưa
-  // xong là mất luôn cả hai đường vào.
-  "workers_dev": true,
+  // Tắt URL *.workers.dev: chỉ phục vụ qua tên miền thật, không để tồn tại
+  // hai địa chỉ cùng ra một nội dung (xấu cho SEO, dễ lộ bản chưa muốn công bố).
+  // Lưu ý: khai báo "routes" thì wrangler mặc định đã tắt workers.dev rồi —
+  // dòng này viết rõ ra để ai đọc config biết đó là cố ý.
+  // Nếu route hỏng mà cần đường vào khẩn cấp: đổi thành true rồi deploy lại.
+  "workers_dev": false,
   "routes": [
     {
       // Tên miền thật. Đây là ROUTE, không phải "custom_domain".
