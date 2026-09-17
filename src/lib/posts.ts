@@ -3,16 +3,6 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 import { markdownToHtml } from "@/lib/markdown";
 
-/* `wrangler types` (không kèm cờ --env-interface) chỉ gộp binding vào
- * namespace `Cloudflare.Env`, còn `getCloudflareContext().env` của
- * @opennextjs/cloudflare lại gõ theo interface toàn cục `CloudflareEnv`
- * riêng (xem node_modules/@opennextjs/cloudflare/dist/api/cloudflare-context.d.ts).
- * Hai interface này không tự gộp — thiếu dòng dưới thì `env.DB` báo lỗi kiểu. */
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- gộp kiểu, không thêm field.
-  interface CloudflareEnv extends Cloudflare.Env {}
-}
-
 /* Hình dạng này khớp PostListItem cũ trong content.ts, cố ý: top-search.tsx
  * và blog-feed.tsx đọc các trường này và không cần biết nguồn đã đổi. */
 export type PostListItem = {
