@@ -1,4 +1,7 @@
+import { cookies } from "next/headers";
+
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { SESSION_COOKIE_NAME, verifySession, type SessionPayload } from "@/lib/session";
 
 export const STATE_COOKIE_NAME = "dungca_blog_oauth_state";
 
@@ -78,7 +81,14 @@ export async function exchangeCodeForLogin(
        * mạng khác: trả null. */
       signal: AbortSignal.timeout(10_000),
     });
-  } catch {
+  } catch (error) {
+    /* Chỉ log thông điệp lỗi — không log clientSecret, không log thân request.
+     * Im lặng hoàn toàn thì lỗi mạng thật và bug lập trình của chính mình
+     * trông giống hệt nhau khi soi log sản xuất. */
+    console.warn(
+      "exchangeCodeForLogin: gọi endpoint đổi token của GitHub thất bại:",
+      error instanceof Error ? error.message : String(error),
+    );
     return null;
   }
 
@@ -100,7 +110,11 @@ export async function exchangeCodeForLogin(
       },
       signal: AbortSignal.timeout(10_000),
     });
-  } catch {
+  } catch (error) {
+    console.warn(
+      "exchangeCodeForLogin: gọi endpoint /user của GitHub thất bại:",
+      error instanceof Error ? error.message : String(error),
+    );
     return null;
   }
 
@@ -131,4 +145,47 @@ async function parseJsonObject(
   } catch {
     return null;
   }
+}
+
+/* Lõi. Mọi đường vào khu admin — route API lẫn trang server component — đi
+ * qua đúng hàm này, nên không đường nào lệch luật với đường nào: không có
+ * token thì null; ký sai hoặc hết hạn (verifySession lo) thì null; ký đúng
+ * nhưng không phải admin thì cũng null. Ca cuối xảy ra khi ADMIN_GITHUB_LOGIN
+ * bị đổi sau lúc cấp session — session cũ phải chết theo, không được sống
+ * sót nhờ chữ ký còn hợp lệ. */
+export async function xacThucToken(
+  token: string | undefined,
+): Promise<SessionPayload | null> {
+  if (!token) return null;
+
+  const env = await readAuthEnv();
+  const session = await verifySession(token, env.SESSION_SECRET);
+  if (!session) return null;
+
+  if (session.login.toLowerCase() !== env.ADMIN_GITHUB_LOGIN.toLowerCase()) {
+    return null;
+  }
+
+  return session;
+}
+
+/* Vỏ cho route API và middleware — cả hai nhận được một `Request` (NextRequest
+ * kế thừa Request). Lớp phòng thủ thứ hai, gọi trong TỪNG route API ghi: có
+ * middleware rồi vẫn cần, vì matcher là cấu hình, và cấu hình sai không kêu. */
+export async function requireSession(request: Request): Promise<SessionPayload | null> {
+  const token = request.headers
+    .get("cookie")
+    ?.split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${SESSION_COOKIE_NAME}=`))
+    ?.slice(SESSION_COOKIE_NAME.length + 1);
+
+  return xacThucToken(token);
+}
+
+/* Vỏ cho server component ở khu admin — nơi không có `Request`, chỉ có
+ * `cookies()` của next/headers. Next 16: cookies() là hàm async, phải await. */
+export async function requireSessionTrenTrang(): Promise<SessionPayload | null> {
+  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+  return xacThucToken(token);
 }
