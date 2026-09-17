@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { getAllProjects } from "@/lib/content";
+import { getAllProjects } from "@/lib/projects";
 import {
   getRepositoryUrl,
   getShowcaseRepositories,

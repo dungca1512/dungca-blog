@@ -6,7 +6,7 @@ import {
   getFeaturedReposConfig,
   getProjectBySlug,
   getProjectSlugs,
-} from "@/lib/content";
+} from "@/lib/projects";
 import { getRepositoryUrl } from "@/lib/github";
 import { formatDate } from "@/lib/format";
 
