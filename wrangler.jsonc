@@ -10,6 +10,8 @@
   },
   "services": [
     {
+      // Tự trỏ về chính mình — tên service phải trùng "name" ở trên.
+      // Thiếu binding này thì revalidatePath ở Task 7 không có tác dụng.
       "binding": "WORKER_SELF_REFERENCE",
       "service": "dungca-blog"
     }
