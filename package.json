@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare populateCache local && wrangler dev --port 8788",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare populateCache remote && wrangler deploy"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

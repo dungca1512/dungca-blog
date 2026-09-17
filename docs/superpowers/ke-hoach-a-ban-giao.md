@@ -1,7 +1,7 @@
 # Kế hoạch A — bàn giao
 
 Nền tảng: blog chạy trên Cloudflare Workers, bài viết đọc từ D1.
-Nhánh: `spike/opennext-cloudflare`. **Chưa deploy, chưa cắt tên miền.**
+Nhánh: `spike/opennext-cloudflare`, đã gộp vào `main`. **Đã deploy, đã cắt tên miền.**
 
 Tài liệu này giữ lại những thứ cần cho Kế hoạch B mà nếu không chép ra đây
 sẽ mất cùng workspace tạm.
@@ -14,7 +14,7 @@ sẽ mất cùng workspace tạm.
 | `npm run typecheck` / `npm run lint` | sạch |
 | `npx opennextjs-cloudflare build` | xanh |
 | `npm run smoke` | 8/8 |
-| Người đọc thấy gì đổi | chưa gì — tên miền vẫn trỏ Cloudflare Pages |
+| Người đọc thấy gì đổi | chưa gì — nội dung y hệt, chỉ đổi nơi phục vụ từ Pages sang Worker |
 
 Đã đo trên `wrangler dev`: `/sitemap.xml` có URL project; `/blog/<slug>/`
 trả `Cache-Control: s-maxage=3600` rồi `x-nextjs-cache: HIT` ở request thứ
@@ -38,7 +38,8 @@ Cloudflare, và mọi lệnh `--remote` đều bị cấm ở đó.
    `npx wrangler d1 execute dungca-blog --remote --command "SELECT slug, published_at FROM posts ORDER BY published_at DESC"`
 6. **Tạo hai bucket R2 riêng**, không dùng chung:
    `dungca-blog-opennext-cache` (cache ISR, adapter sở hữu) và `blog-media` (ảnh).
-7. Chỉ sau khi trên site thật mọi thứ xanh mới cắt tên miền từ Pages sang Worker.
+7. ~~Cắt tên miền từ Pages sang Worker.~~ Đã xong: `blog-dungca.ai-innovation-homelab.org/*` là một
+   Worker **route** (không phải custom domain), auto-build của Pages đã tắt.
 
 ## Tồn đọng chuyển sang Kế hoạch B
 

@@ -11,6 +11,22 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Giữ URL *.workers.dev sống làm đường thoát hiểm. Khai báo "routes" mà
+  // không có dòng này thì wrangler TẮT workers.dev — lúc tên miền thật chưa
+  // xong là mất luôn cả hai đường vào.
+  "workers_dev": true,
+  "routes": [
+    {
+      // Tên miền thật. Đây là ROUTE, không phải "custom_domain".
+      // Lý do: hostname này từng thuộc project Pages "dungca-blog" và để lại
+      // bản ghi DNS proxy. Custom domain đòi tự tạo bản ghi DNS nên gặp bản ghi
+      // cũ là hỏng (lỗi 100117), mà token OAuth của wrangler KHÔNG có quyền
+      // ghi DNS để dọn. Route thì bám vào bản ghi proxy sẵn có — chỉ cần
+      // workers_routes:write, thứ token đang có.
+      "pattern": "blog-dungca.ai-innovation-homelab.org/*",
+      "zone_name": "ai-innovation-homelab.org"
+    }
+  ],
   "services": [
     {
       // Tự trỏ về chính mình — tên service phải trùng "name" ở trên.
