@@ -31,12 +31,21 @@ function toBase64Url(bytes: Uint8Array): string {
  * cả SharedArrayBuffer). TS 5.7+ generic hoá Uint8Array nên phải ghi tường minh. */
 function fromBase64Url(value: string): Uint8Array<ArrayBuffer> | null {
   try {
-    const padded = value.replace(/-/g, "+").replace(/_/g, "/");
-    const binary = atob(padded);
+    /* Chỉ đổi bảng chữ base64url → base64 chuẩn. KHÔNG thêm lại dấu "=":
+     * atob theo chuẩn forgiving-base64 nên tự bù được phần đệm thiếu. Sự
+     * thật ngầm này đáng ghi ra vì nó khiến hàm trông như quên một bước. */
+    const chuanBase64 = value.replace(/-/g, "+").replace(/_/g, "/");
+    const binary = atob(chuanBase64);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i += 1) {
       bytes[i] = binary.charCodeAt(i);
     }
+    /* Đúng một chuỗi ứng với một chuỗi byte. Vì forgiving-base64 bỏ qua các
+     * bit đệm thừa, "...I" và "...9" giải mã ra cùng byte — nếu không chặn
+     * thì một phiên có nhiều biểu diễn chuỗi, và mọi thứ về sau đánh dấu
+     * theo chuỗi token (denylist, cache-key, khử trùng lặp log) đều lách
+     * được. Phép so sánh này KHÔNG đụng secret nên dùng !== là an toàn. */
+    if (toBase64Url(bytes) !== value) return null;
     return bytes;
   } catch {
     return null;
@@ -57,6 +66,11 @@ export async function signSession(
   payload: SessionPayload,
   secret: string,
 ): Promise<string> {
+  /* Ký bằng secret rỗng là phát ra token mà ai cũng giả được. Nổ ở đây, lúc
+   * phát, còn hơn phát ra rồi mới phát hiện. */
+  if (!secret) {
+    throw new Error("signSession: SESSION_SECRET rỗng hoặc chưa đặt");
+  }
   const body = toBase64Url(new TextEncoder().encode(JSON.stringify(payload)));
   const signature = await crypto.subtle.sign(
     "HMAC",
@@ -71,6 +85,14 @@ export async function verifySession(
   secret: string,
   nowSeconds: number = Math.floor(Date.now() / 1000),
 ): Promise<SessionPayload | null> {
+  /* Hai thứ này lẽ ra không xảy ra nếu call site đúng kiểu. Nhưng đây là
+   * hàng rào bảo mật, và hàng rào không được đổ: secret rỗng thì
+   * crypto.subtle.importKey ném DataError, token không phải chuỗi thì .split
+   * ném TypeError. Cả hai đều biến một request thành 500 thay vì một lần
+   * chuyển hướng về đăng nhập. Chỗ hét lên vì thiếu biến môi trường là
+   * readAuthEnv() lúc đọc cấu hình, không phải giữa đường kiểm cookie. */
+  if (typeof token !== "string" || !token) return null;
+  if (!secret) return null;
   const parts = token.split(".");
   if (parts.length !== 2) return null;
 
@@ -81,8 +103,9 @@ export async function verifySession(
   if (!signatureBytes) return null;
 
   /* crypto.subtle.verify so sánh trong thời gian hằng định. Đừng thay bằng
-   * `signHere === signature` — so sánh chuỗi thoát sớm ở byte đầu khác nhau,
-   * và thời gian thoát đó rò rỉ chữ ký đúng từng byte một. */
+   * phép so sánh bằng tuyệt đối kiểu chuỗi (signHere so với signature) — so
+   * sánh chuỗi thoát sớm ở byte đầu khác nhau, và thời gian thoát đó rò rỉ
+   * chữ ký đúng từng byte một. */
   const valid = await crypto.subtle.verify(
     "HMAC",
     await hmacKey(secret),
