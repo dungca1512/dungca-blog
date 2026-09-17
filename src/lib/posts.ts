@@ -85,10 +85,18 @@ export async function findPublishedPost(
   };
 }
 
-/* async: true vì hàm này còn được gọi lúc `next build` prerender các trang
- * tĩnh (home, /blog, layout). Lúc đó không có request thật nên bản đồng bộ
- * của getCloudflareContext() sẽ ném lỗi; bản async dựng platform proxy đọc
- * .wrangler/state cục bộ nên chạy được cả lúc build lẫn lúc có request. */
+/* async: true là lưới an toàn cho đường gọi nằm ngoài request context (ví
+ * dụ script chạy tay). Mọi đường gọi hiện tại (/, /blog, /blog/[slug],
+ * /api/search-index) đều nằm trong request nên bản đồng bộ của
+ * getCloudflareContext() cũng đủ dùng.
+ *
+ * Điều quan trọng nhất: KHÔNG đường gọi nào được phép chạy lúc `next
+ * build`. Home và /blog từng gọi getAllPosts() lúc prerender — mỗi lần
+ * render như vậy rò một instance workerd, chỉ vài trang là tranh khoá file
+ * SQLite cục bộ và build đổ với SQLITE_BUSY. Vì vậy home, /blog và sitemap
+ * giờ force-dynamic, còn layout không còn gọi getAllPosts() nữa (chỉ mục
+ * tìm kiếm chuyển sang route /api/search-index, nạp lúc runtime). Xem
+ * tests/route-config.test.ts — test đó khoá đúng quy tắc này. */
 async function db(): Promise<D1Database> {
   const { env } = await getCloudflareContext({ async: true });
   return env.DB;

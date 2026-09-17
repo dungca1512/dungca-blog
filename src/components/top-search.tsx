@@ -24,14 +24,32 @@ export function TopSearch() {
     if (hasLoadedRef.current) {
       return;
     }
-    hasLoadedRef.current = true;
 
     fetch("/api/search-index")
-      .then((res) => res.json() as Promise<PostListItem[]>)
-      .then((data) => setPosts(data))
+      .then((res) => {
+        if (!res.ok) {
+          return null;
+        }
+        return res.json() as Promise<unknown>;
+      })
+      .then((data) => {
+        // Chỉ nhận dữ liệu đúng hình dạng mảng. Endpoint có thể trả JSON
+        // không phải mảng (trang lỗi 500 dạng JSON, proxy chen vào...);
+        // nếu setPosts nhận nhầm, posts.map trong useMemo bên dưới sẽ ném
+        // ngay lúc render — mà TopSearch nằm trong root layout, nên một
+        // lần fetch hỏng sẽ sập cả site. Không phải bây giờ.
+        if (!Array.isArray(data)) {
+          return;
+        }
+
+        setPosts(data as PostListItem[]);
+        // Chỉ đánh dấu đã nạp SAU KHI thành công: một lần mạng chập không
+        // được phép làm tìm kiếm chết vĩnh viễn tới lúc người dùng reload.
+        hasLoadedRef.current = true;
+      })
       .catch(() => {
         // Hỏng tìm kiếm không được phép làm hỏng cả trang: nuốt lỗi,
-        // để posts rỗng.
+        // để posts rỗng. Không đánh dấu đã nạp, để lần focus sau thử lại.
       });
   }
 
