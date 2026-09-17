@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Code sinh tự động của bản build Workers (OpenNext / Wrangler), không
+    // phải code do người viết — lint chúng chỉ tạo hàng nghìn cảnh báo vô ích
+    // và khiến cổng lint luôn đỏ, dạy người ta phớt lờ nó.
+    ".open-next/**",
+    ".wrangler/**",
+    // Kiểu sinh tự động bởi `wrangler types`, không phải code do người viết.
+    "worker-configuration.d.ts",
   ]),
 ]);
 

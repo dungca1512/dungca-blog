@@ -4,23 +4,54 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { PostListItem } from "@/lib/content";
+import type { PostListItem } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
-
-type TopSearchProps = {
-  posts: PostListItem[];
-};
 
 type SearchHit = {
   post: PostListItem;
   score: number;
 };
 
-export function TopSearch({ posts }: TopSearchProps) {
+export function TopSearch() {
   const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [posts, setPosts] = useState<PostListItem[]>([]);
+  const hasLoadedRef = useRef(false);
+
+  function loadIndexOnce() {
+    if (hasLoadedRef.current) {
+      return;
+    }
+
+    fetch("/api/search-index")
+      .then((res) => {
+        if (!res.ok) {
+          return null;
+        }
+        return res.json() as Promise<unknown>;
+      })
+      .then((data) => {
+        // Chỉ nhận dữ liệu đúng hình dạng mảng. Endpoint có thể trả JSON
+        // không phải mảng (trang lỗi 500 dạng JSON, proxy chen vào...);
+        // nếu setPosts nhận nhầm, posts.map trong useMemo bên dưới sẽ ném
+        // ngay lúc render — mà TopSearch nằm trong root layout, nên một
+        // lần fetch hỏng sẽ sập cả site. Không phải bây giờ.
+        if (!Array.isArray(data)) {
+          return;
+        }
+
+        setPosts(data as PostListItem[]);
+        // Chỉ đánh dấu đã nạp SAU KHI thành công: một lần mạng chập không
+        // được phép làm tìm kiếm chết vĩnh viễn tới lúc người dùng reload.
+        hasLoadedRef.current = true;
+      })
+      .catch(() => {
+        // Hỏng tìm kiếm không được phép làm hỏng cả trang: nuốt lỗi,
+        // để posts rỗng. Không đánh dấu đã nạp, để lần focus sau thử lại.
+      });
+  }
 
   const results = useMemo(() => {
     const keyword = normalizeText(query.trim());
@@ -96,7 +127,10 @@ export function TopSearch({ posts }: TopSearchProps) {
           setQuery(event.target.value);
           setOpen(true);
         }}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          setOpen(true);
+          loadIndexOnce();
+        }}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
             setOpen(false);

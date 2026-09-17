@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "dungca-blog",
+  "compatibility_date": "2026-03-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Tự trỏ về chính mình — tên service phải trùng "name" ở trên.
+      // Thiếu binding này thì revalidatePath ở Task 7 không có tác dụng.
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "dungca-blog"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "dungca-blog-opennext-cache"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dungca-blog",
+      // Database chưa được tạo. Trước lần deploy đầu, chạy
+      // `npx wrangler d1 create dungca-blog` rồi dán database_id thật vào đây.
+      "database_id": "PLACEHOLDER-CHUA-TAO-XEM-COMMENT"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  }
+}

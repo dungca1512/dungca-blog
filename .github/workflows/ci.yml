@@ -25,5 +25,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Bộ test là tấm lưới duy nhất bắt được projects-index.generated.ts lệch
+      # khỏi content/projects/. Thiếu bước này, lệch đó đi thẳng ra production
+      # dưới dạng sitemap thiếu URL mà build vẫn xanh.
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build

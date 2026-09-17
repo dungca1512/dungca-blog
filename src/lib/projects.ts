@@ -1,29 +1,21 @@
+/* Module này đọc filesystem, nên mọi hàm ở đây CHỈ chạy được lúc `next build`.
+ * Worker không có filesystem lúc chạy: bất kỳ route nào gọi vào đây mà render
+ * theo yêu cầu sẽ đổ ở production chứ không phải ở local.
+ *
+ * Ràng buộc đó được ghim bằng `dynamicParams = false` trên route projects.
+ * Đừng bỏ dòng đó mà không chuyển projects sang D1 trước. */
+
 import fs from "node:fs/promises";
 import path from "node:path";
 
 import matter from "gray-matter";
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkHtml from "remark-html";
+import { markdownToHtml } from "@/lib/markdown";
 
 const CONTENT_ROOT = path.join(process.cwd(), "content");
-const POSTS_DIR = path.join(CONTENT_ROOT, "posts");
 const PROJECTS_DIR = path.join(CONTENT_ROOT, "projects");
 const FEATURED_REPOS_FILE = path.join(PROJECTS_DIR, "featured-repos.json");
 
 type MatterData = Record<string, unknown>;
-
-export type PostListItem = {
-  slug: string;
-  title: string;
-  summary: string;
-  date: string;
-  tags: string[];
-};
-
-export type Post = PostListItem & {
-  contentHtml: string;
-};
 
 export type ProjectListItem = {
   slug: string;
@@ -176,30 +168,6 @@ async function readMarkdownFile(
   }
 }
 
-async function markdownToHtml(markdown: string): Promise<string> {
-  const processed = await remark()
-    .use(remarkGfm)
-    .use(remarkHtml)
-    .process(markdown);
-
-  return processed.toString();
-}
-
-function parsePostMeta(slug: string, data: MatterData): PostListItem {
-  const title = asString(data.title, slug);
-  const summary = asString(data.summary, "Chưa có tóm tắt.");
-  const date = normalizeDate(data.date);
-  const tags = asStringArray(data.tags);
-
-  return {
-    slug,
-    title,
-    summary,
-    date,
-    tags,
-  };
-}
-
 function parseProjectMeta(slug: string, data: MatterData): ProjectListItem {
   const title = asString(data.title, slug);
   const summary = asString(data.summary, "Chưa có tóm tắt.");
@@ -218,56 +186,6 @@ function parseProjectMeta(slug: string, data: MatterData): ProjectListItem {
     order,
     repo: repo || undefined,
     demoUrl: demoUrl || undefined,
-  };
-}
-
-export async function getPostSlugs(): Promise<string[]> {
-  const files = await readMarkdownFiles(POSTS_DIR);
-  return files.map(stripMarkdownExtension);
-}
-
-export async function getAllPosts(): Promise<PostListItem[]> {
-  const files = await readMarkdownFiles(POSTS_DIR);
-
-  const posts = await Promise.all(
-    files.map(async (fileName) => {
-      const slug = stripMarkdownExtension(fileName);
-      const source = await fs.readFile(path.join(POSTS_DIR, fileName), "utf8");
-      const parsed = matter(source);
-      const data = parsed.data as MatterData;
-
-      if (asBoolean(data.draft, false)) {
-        return null;
-      }
-
-      return parsePostMeta(slug, data);
-    }),
-  );
-
-  return posts
-    .filter((item): item is PostListItem => item !== null)
-    .sort((a, b) => compareDateDesc(a.date, b.date));
-}
-
-export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const source = await readMarkdownFile(POSTS_DIR, slug);
-  if (!source) {
-    return null;
-  }
-
-  const parsed = matter(source);
-  const data = parsed.data as MatterData;
-
-  if (asBoolean(data.draft, false)) {
-    return null;
-  }
-
-  const meta = parsePostMeta(slug, data);
-  const contentHtml = await markdownToHtml(parsed.content);
-
-  return {
-    ...meta,
-    contentHtml,
   };
 }
 

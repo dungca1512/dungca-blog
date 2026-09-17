@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getAllPosts, getPostBySlug, getPostSlugs } from "@/lib/content";
+import { getAllPosts, getPostBySlug } from "@/lib/posts";
+import { buildArticleHtmlAndToc } from "@/lib/article-toc";
 import { formatDate } from "@/lib/format";
 import { PORTFOLIO_URL, SITE_NAME } from "@/lib/site";
 
@@ -10,20 +11,19 @@ type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-type TocItem = {
-  id: string;
-  text: string;
-  level: 2 | 3;
-};
+/* Bài viết nằm trong D1, mà lúc `next build` không có binding nên không
+ * enumerate được. Trang render theo yêu cầu lần đầu rồi nằm trong cache ISR;
+ * lúc đăng bài, hành động publish gọi revalidatePath để đẩy bản mới lên.
+ * Con số 3600 là lưới an toàn phòng khi lời gọi revalidate thất bại, không
+ * phải cơ chế cập nhật chính. */
+export const revalidate = 3600;
 
-export const dynamicParams = false;
-
+/* Mảng rỗng: không prerender bài nào lúc build (đọc D1 lúc build là hỏng
+ * build — xem /api/search-index). Nhưng Next chỉ ghi route động vào ISR khi
+ * có hàm này, nên thiếu nó thì `revalidate` ở trên chỉ là chữ trang trí và
+ * `revalidatePath` sau này không có đường cache nào để xoá. */
 export async function generateStaticParams() {
-  const slugs = await getPostSlugs();
-
-  return slugs.map((slug) => ({
-    slug,
-  }));
+  return [];
 }
 
 export async function generateMetadata({
@@ -187,58 +187,4 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </aside>
     </main>
   );
-}
-
-function buildArticleHtmlAndToc(contentHtml: string): {
-  htmlWithIds: string;
-  toc: TocItem[];
-} {
-  const toc: TocItem[] = [];
-  const used = new Map<string, number>();
-
-  const htmlWithIds = contentHtml.replace(
-    /<h([2-3])>([\s\S]*?)<\/h\1>/g,
-    (headingSource, levelValue, titleHtml) => {
-      const level = Number(levelValue) as 2 | 3;
-      const text = stripHtml(titleHtml).trim();
-      if (!text) {
-        return headingSource;
-      }
-
-      const baseId = toSlug(text) || `muc-${toc.length + 1}`;
-      const count = (used.get(baseId) ?? 0) + 1;
-      used.set(baseId, count);
-      const id = count === 1 ? baseId : `${baseId}-${count}`;
-
-      toc.push({ id, text, level });
-
-      return `<h${level} id="${id}" class="article-heading">${titleHtml}</h${level}>`;
-    },
-  );
-
-  return {
-    htmlWithIds,
-    toc,
-  };
-}
-
-function stripHtml(value: string): string {
-  return value
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\s+/g, " ");
-}
-
-function toSlug(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
 }

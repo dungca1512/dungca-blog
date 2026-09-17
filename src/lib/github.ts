@@ -1,4 +1,4 @@
-import { getFeaturedReposConfig } from "@/lib/content";
+import { getFeaturedReposConfig } from "@/lib/projects";
 
 const AI_KEYWORDS = [
   "ai",
