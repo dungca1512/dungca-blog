@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     // và khiến cổng lint luôn đỏ, dạy người ta phớt lờ nó.
     ".open-next/**",
     ".wrangler/**",
+    // Kiểu sinh tự động bởi `wrangler types`, không phải code do người viết.
+    "worker-configuration.d.ts",
   ]),
 ]);
 
