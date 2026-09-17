@@ -14,6 +14,9 @@ type ProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+// Projects đọc từ filesystem (xem src/lib/projects.ts). Worker không có
+// filesystem lúc chạy, nên mọi slug phải được biết lúc build. Bỏ dòng này
+// thì một slug lạ sẽ cố render theo yêu cầu và đổ ở production.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
