@@ -1318,3 +1318,6 @@ a {
 .editor-preview { min-height: 55vh; padding: 16px; border: 1px solid var(--base-border); border-radius: var(--base-radius-sm); background: var(--base-surface); }
 .editor-actions { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--base-border); background: var(--base-background); }
 .editor-status { color: var(--base-muted-foreground); font-size: 0.85rem; }
+/* Ẩn ô chọn file gốc nhưng vẫn để nó nằm trong luồng bàn phím: display:none
+   là cắt nó khỏi cây khả truy cập luôn. */
+.editor-file-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }

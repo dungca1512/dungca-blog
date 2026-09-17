@@ -78,7 +78,30 @@ export function PostEditor({ post }: Props) {
     setBody((value) => value.slice(0, start) + text + value.slice(end));
     requestAnimationFrame(() => { el.focus(); el.selectionStart = el.selectionEnd = start + text.length; });
   }
-  void chenTaiConTro;
+
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function taiAnh(file: File) {
+    setStatus("Đang tải ảnh…");
+    const form = new FormData();
+    form.append("file", file);
+
+    const response = await fetch("/api/admin/upload", { method: "POST", body: form });
+
+    if (!response.ok) {
+      const loi = (await response.json().catch(() => ({}))) as { error?: string };
+      setStatus(loi.error ?? `Tải ảnh thất bại (${response.status}).`);
+      return;
+    }
+
+    const { url } = (await response.json()) as { url: string };
+    /* Chèn tại con trỏ, không nối vào cuối: nối vào cuối thì ảnh luôn rơi
+     * xuống đáy bài và người viết phải tự cắt dán — trên điện thoại là cực
+     * hình. */
+    chenTaiConTro(`\n\n![](${url})\n\n`);
+    setStatus("Đã chèn ảnh.");
+  }
+
   return <div className="editor">
     <div className="editor-fields">
       <label className="editor-label">Tiêu đề<input className="editor-input" value={title} onChange={(e) => setTitle(e.target.value)} /></label>
@@ -93,6 +116,28 @@ export function PostEditor({ post }: Props) {
       <textarea ref={bodyRef} className="editor-body" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Viết bằng Markdown…" />
     ) : <div className="editor-preview article-body" dangerouslySetInnerHTML={{ __html: preview }} />}
     <div className="editor-actions">
+      <input
+        accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+        className="editor-file-input"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) void taiAnh(file);
+          /* Xoá giá trị để chọn lại CÙNG file lần nữa vẫn kích hoạt
+             onChange — nếu không, upload hỏng lần một là không thử lại được
+             mà không hiểu vì sao. */
+          e.target.value = "";
+        }}
+        ref={fileRef}
+        type="file"
+      />
+      <button
+        className="admin-btn"
+        disabled={saving}
+        onClick={() => fileRef.current?.click()}
+        type="button"
+      >
+        Chèn ảnh
+      </button>
       <button className="admin-btn" disabled={saving} onClick={luuNhap} type="button">Lưu nháp</button>
       <button className="admin-btn admin-btn-primary" disabled={saving} onClick={dangBai} type="button">Đăng bài</button>
       {post?.status === "published" && <button className="admin-btn" disabled={saving} onClick={goVeNhap} type="button">Gỡ về nháp</button>}

@@ -25,7 +25,7 @@ import * as postPage from "@/app/blog/[slug]/page";
 describe("route-config: quy tắc không đọc D1 lúc build", () => {
   /* Các file của Task 8–10 chưa tồn tại. Bỏ skip khi upload route và giao diện
    * admin đã đủ, để test không biến kế hoạch triển khai thành lỗi giả. */
-  it.skip("mọi route admin đều force-dynamic", () => {
+  it("mọi route admin đều force-dynamic", () => {
     const files = [
       "src/app/api/admin/posts/route.ts",
       "src/app/api/admin/posts/[id]/route.ts",
