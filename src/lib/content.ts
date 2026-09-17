@@ -2,9 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import matter from "gray-matter";
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkHtml from "remark-html";
+import { markdownToHtml } from "@/lib/markdown";
 
 const CONTENT_ROOT = path.join(process.cwd(), "content");
 const POSTS_DIR = path.join(CONTENT_ROOT, "posts");
@@ -174,15 +172,6 @@ async function readMarkdownFile(
 
     throw error;
   }
-}
-
-async function markdownToHtml(markdown: string): Promise<string> {
-  const processed = await remark()
-    .use(remarkGfm)
-    .use(remarkHtml)
-    .process(markdown);
-
-  return processed.toString();
 }
 
 function parsePostMeta(slug: string, data: MatterData): PostListItem {
