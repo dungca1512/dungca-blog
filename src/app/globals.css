@@ -1283,3 +1283,25 @@ a {
     font-size: clamp(2.1rem, 9vw, 3rem);
   }
 }
+
+/* Khu quản trị ưu tiên điện thoại: mặc định xếp dọc, các nút đủ vùng chạm. */
+.admin-shell { min-height: 100vh; background: var(--base-background); color: var(--base-foreground); }
+.admin-topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--base-border); background: var(--base-surface); }
+.admin-brand { color: var(--base-foreground); font-family: var(--font-ui); font-weight: 600; text-decoration: none; }
+.admin-nav { display: flex; align-items: center; gap: 16px; font-size: 0.9rem; }
+.admin-nav a, .admin-link-btn { padding: 0; border: 0; background: none; color: var(--base-muted-foreground); font: inherit; text-decoration: none; cursor: pointer; }
+.admin-nav a:hover, .admin-link-btn:hover { color: var(--base-foreground); }
+.admin-main { max-width: 900px; margin: 0 auto; padding: 24px 16px 64px; }
+.admin-page-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+.admin-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 1px solid var(--base-border); border-radius: var(--base-radius-sm); background: var(--base-surface); color: var(--base-foreground); font: inherit; text-decoration: none; cursor: pointer; }
+.admin-btn:hover { background: var(--base-surface-muted); }
+.admin-btn-primary { border-color: var(--base-primary); background: var(--base-primary); color: var(--base-primary-foreground); }
+.admin-btn-primary:hover { background: var(--base-primary); filter: brightness(1.1); }
+.admin-empty { color: var(--base-muted-foreground); }
+.admin-post-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.admin-post-item { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px; padding: 14px 12px; border: 1px solid var(--base-border); border-radius: var(--base-radius-sm); background: var(--base-surface); }
+.admin-post-title { color: var(--base-foreground); font-weight: 600; text-decoration: none; }
+.admin-post-meta { grid-column: 1 / -1; color: var(--base-muted-foreground); font-size: 0.8rem; }
+.admin-badge { padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; white-space: nowrap; }
+.admin-badge-published { background: color-mix(in srgb, var(--base-success) 18%, transparent); color: var(--base-success); }
+.admin-badge-draft { background: var(--base-surface-muted); color: var(--base-muted-foreground); }
