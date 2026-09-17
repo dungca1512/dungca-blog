@@ -24,11 +24,15 @@
   ],
   "d1_databases": [
     {
+      // Tên binding PHẢI là "DB" — src/lib/posts.ts đọc getCloudflareContext().env.DB.
+      // `wrangler d1 create` mặc định đề nghị "dungca_blog"; đổi là mất database.
       "binding": "DB",
       "database_name": "dungca-blog",
-      // Database chưa được tạo. Trước lần deploy đầu, chạy
-      // `npx wrangler d1 create dungca-blog` rồi dán database_id thật vào đây.
-      "database_id": "PLACEHOLDER-CHUA-TAO-XEM-COMMENT"
+      // Không phải secret. Vào git là đúng.
+      "database_id": "609a7430-0bdd-4131-beda-e1a56cb0c859"
+      // Cố ý KHÔNG đặt "remote": true. Với cờ đó, `wrangler dev` đọc và GHI
+      // thẳng vào D1 production — một lần thử nghiệm ở local là sửa dữ liệu
+      // thật. Dev dùng D1 local; muốn chạm bản thật thì gõ --remote rõ ràng.
     }
   ],
   "images": {
