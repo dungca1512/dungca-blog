@@ -25,11 +25,9 @@ describe("proxy bảo vệ admin", () => {
 /* Test này quét cây thư mục thật, nên route admin mới thêm sau này cũng bị
  * soi — không phụ thuộc vào việc ai đó nhớ cập nhật danh sách.
  *
- * Khối này để describe.skip ở Task 5: src/app/api/admin/ chưa tồn tại nên
- * readdirSync ném ENOENT, và ngay cả khi tạo thư mục rỗng thì
- * expect(files.length).toBeGreaterThan(0) vẫn đỏ. Task 7 Step 6 sẽ bỏ
- * .skip khi route admin đầu tiên xuất hiện. */
-describe.skip("mọi route /api/admin đều tự kiểm tra session", () => {
+ * Không chỉ dựa vào Proxy: matcher là cấu hình, nên từng route ghi dữ liệu
+ * vẫn phải có hàng rào requireSession của riêng nó. */
+describe("mọi route /api/admin đều tự kiểm tra session", () => {
   function routeFiles(dir: string): string[] {
     return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
       const full = join(dir, entry.name);

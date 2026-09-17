@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
 
 /* Test này tồn tại vì một quy tắc đắt tiền: đọc D1 lúc `next build` làm rò
  * một instance workerd cho mỗi lần render trang, và chỉ vài trang là các
@@ -22,6 +23,22 @@ import * as searchIndexRoute from "@/app/api/search-index/route";
 import * as postPage from "@/app/blog/[slug]/page";
 
 describe("route-config: quy tắc không đọc D1 lúc build", () => {
+  /* Các file của Task 8–10 chưa tồn tại. Bỏ skip khi upload route và giao diện
+   * admin đã đủ, để test không biến kế hoạch triển khai thành lỗi giả. */
+  it.skip("mọi route admin đều force-dynamic", () => {
+    const files = [
+      "src/app/api/admin/posts/route.ts",
+      "src/app/api/admin/posts/[id]/route.ts",
+      "src/app/api/admin/posts/[id]/publish/route.ts",
+      "src/app/api/admin/upload/route.ts",
+      "src/app/admin/page.tsx",
+      "src/app/admin/posts/[id]/page.tsx",
+    ];
+    const thieu = files.filter(
+      (file) => !readFileSync(file, "utf8").includes('export const dynamic = "force-dynamic"'),
+    );
+    expect(thieu).toEqual([]);
+  });
   it("/ là force-dynamic", () => {
     expect(home.dynamic).toBe("force-dynamic");
   });
