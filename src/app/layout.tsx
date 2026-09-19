@@ -62,10 +62,15 @@ export default function RootLayout({
       <head>
         {/* Chạy đồng bộ, trước khi trình duyệt vẽ frame đầu. Đặt trong
             useEffect thì người đọc ban đêm ăn một chớp trắng mỗi lần chuyển
-            trang. Giữ script này ngắn và không phụ thuộc gì. */}
+            trang. Giữ script này ngắn và không phụ thuộc gì.
+
+            Chỉ "dark"/"light" mới là lựa chọn tay; mọi trường hợp khác GỠ
+            data-theme để @media (prefers-color-scheme) trong globals.css
+            quyết định. Không đọc matchMedia ở đây nữa — CSS làm việc đó sớm
+            hơn JS và còn đúng cả khi người dùng đổi cài đặt máy giữa phiên. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");if(!t){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light"){document.documentElement.dataset.theme=t}else{document.documentElement.removeAttribute("data-theme")}}catch(e){}})()`,
           }}
         />
       </head>

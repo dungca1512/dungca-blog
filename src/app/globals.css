@@ -75,9 +75,11 @@
   --base-border: #ffffff1c;
 }
 
-/* Theo hệ thống khi người dùng chưa chọn gì. Script trong layout.tsx đặt
- * data-theme="dark" trước khi trang vẽ, nên khối này chỉ là lưới đỡ cho
- * trường hợp JS chưa chạy. */
+/* Chế độ "theo hệ thống" — mặc định, và là chế độ của mọi người chưa bấm nút
+ * bao giờ. Khối này KHÔNG phải lưới đỡ: ở chế độ đó <html> cố tình không có
+ * data-theme, nên chính @media này quyết định màu. Nhờ vậy người dùng đổi cài
+ * đặt sáng/tối của máy là trang đổi theo ngay giữa phiên, không cần JS.
+ * Chọn tay (data-theme="light"/"dark") thì ghi đè khối này. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --base-background: var(--base-palette-neutral-950);
