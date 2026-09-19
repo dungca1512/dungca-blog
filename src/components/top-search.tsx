@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { PostListItem } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
+import { createSearchIndexLoader } from "@/lib/search-index-loader";
 
 type SearchHit = {
   post: PostListItem;
@@ -18,39 +19,21 @@ export function TopSearch() {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [posts, setPosts] = useState<PostListItem[]>([]);
-  const hasLoadedRef = useRef(false);
+  /* Gọi fetch qua vỏ mũi tên, không truyền thẳng `fetch`: hàm này phải chạy
+   * với `this` là window, tách ra khỏi window là "Illegal invocation". */
+  const loadRef = useRef<ReturnType<typeof createSearchIndexLoader> | null>(null);
 
   function loadIndexOnce() {
-    if (hasLoadedRef.current) {
-      return;
-    }
+    loadRef.current ??= createSearchIndexLoader((...args) => fetch(...args));
 
-    fetch("/api/search-index")
-      .then((res) => {
-        if (!res.ok) {
-          return null;
-        }
-        return res.json() as Promise<unknown>;
-      })
-      .then((data) => {
-        // Chỉ nhận dữ liệu đúng hình dạng mảng. Endpoint có thể trả JSON
-        // không phải mảng (trang lỗi 500 dạng JSON, proxy chen vào...);
-        // nếu setPosts nhận nhầm, posts.map trong useMemo bên dưới sẽ ném
-        // ngay lúc render — mà TopSearch nằm trong root layout, nên một
-        // lần fetch hỏng sẽ sập cả site. Không phải bây giờ.
-        if (!Array.isArray(data)) {
-          return;
-        }
-
-        setPosts(data as PostListItem[]);
-        // Chỉ đánh dấu đã nạp SAU KHI thành công: một lần mạng chập không
-        // được phép làm tìm kiếm chết vĩnh viễn tới lúc người dùng reload.
-        hasLoadedRef.current = true;
-      })
-      .catch(() => {
-        // Hỏng tìm kiếm không được phép làm hỏng cả trang: nuốt lỗi,
-        // để posts rỗng. Không đánh dấu đã nạp, để lần focus sau thử lại.
-      });
+    /* Lõi lo phần gộp request, nhớ kết quả và cho thử lại khi hỏng — xem
+     * src/lib/search-index-loader.ts. Ở đây chỉ còn việc đổ vào state.
+     * null nghĩa là lần nạp này hỏng: giữ nguyên posts, không sập trang. */
+    loadRef.current().then((data) => {
+      if (data) {
+        setPosts(data);
+      }
+    });
   }
 
   const results = useMemo(() => {
