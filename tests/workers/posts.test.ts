@@ -1,6 +1,6 @@
 import { env, applyD1Migrations } from "cloudflare:test";
 import { describe, it, expect, beforeAll, beforeEach } from "vitest";
-import { listPublishedPosts, findPublishedPost } from "@/lib/posts";
+import { listPublishedPosts, fetchPostPageData } from "@/lib/posts";
 
 beforeAll(async () => {
   await applyD1Migrations(env.DB, env.TEST_MIGRATIONS);
@@ -67,27 +67,86 @@ describe("listPublishedPosts", () => {
   });
 });
 
-describe("findPublishedPost", () => {
-  it("render markdown thành html", async () => {
-    await seed("co-noi-dung", "published", "2026-03-01");
+/* Đếm số VÒNG đi tới D1. prepare() chỉ dựng câu lệnh, chưa chạm mạng; chạm
+ * mạng là .all()/.first()/.run() và batch(). Một batch nhiều câu lệnh vẫn
+ * là một vòng — đó chính là thứ bài test này khoá lại. */
+type HamBatKy = (...args: never[]) => unknown;
 
-    const post = await findPublishedPost(env.DB, "co-noi-dung");
-    expect(post?.contentHtml).toContain("<h2>Mục</h2>");
+function demVongToiD1(db: D1Database) {
+  let vong = 0;
+
+  function demRoiGoi(ham: HamBatKy, chu: object) {
+    return (...args: never[]) => {
+      vong += 1;
+      return ham.apply(chu, args);
+    };
+  }
+
+  const boc = new Proxy(db, {
+    get(muc, ten) {
+      const gia = Reflect.get(muc, ten) as HamBatKy | unknown;
+
+      if (ten === "batch") {
+        return demRoiGoi(gia as HamBatKy, muc);
+      }
+
+      if (ten === "prepare") {
+        return (...args: never[]) => {
+          const stmt = (gia as HamBatKy).apply(muc, args) as object;
+          return new Proxy(stmt, {
+            get(s, t) {
+              const v = Reflect.get(s, t) as HamBatKy | unknown;
+              if (t === "all" || t === "first" || t === "run") {
+                return demRoiGoi(v as HamBatKy, s);
+              }
+              return typeof v === "function" ? (v as HamBatKy).bind(s) : v;
+            },
+          });
+        };
+      }
+
+      return typeof gia === "function" ? (gia as HamBatKy).bind(muc) : gia;
+    },
   });
 
-  it("trả null với bài nháp", async () => {
+  return { boc, dem: () => vong };
+}
+
+describe("fetchPostPageData", () => {
+  it("trả bài và danh sách bài khác trong MỘT vòng tới D1", async () => {
+    await seed("dang-doc", "published", "2026-03-02", ["ml"]);
+    await seed("bai-khac", "published", "2026-03-01", ["ml"]);
+
+    const { boc, dem } = demVongToiD1(env.DB);
+    const data = await fetchPostPageData(boc, "dang-doc");
+
+    expect(data.post?.slug).toBe("dang-doc");
+    expect(data.post?.contentHtml).toContain("<h2>Mục</h2>");
+    expect(data.allPosts.map((p) => p.slug)).toEqual(["dang-doc", "bai-khac"]);
+    expect(dem()).toBe(1);
+  });
+
+  it("bài không tồn tại: post null nhưng danh sách vẫn đủ", async () => {
+    await seed("con-song", "published", "2026-03-01");
+
+    const data = await fetchPostPageData(env.DB, "khong-co");
+
+    expect(data.post).toBeNull();
+    expect(data.allPosts.map((p) => p.slug)).toEqual(["con-song"]);
+  });
+
+  it("bài nháp bị coi như không tồn tại", async () => {
     await seed("nhap", "draft", null);
-    expect(await findPublishedPost(env.DB, "nhap")).toBeNull();
-  });
 
-  it("trả null khi không có slug", async () => {
-    expect(await findPublishedPost(env.DB, "khong-co")).toBeNull();
+    expect((await fetchPostPageData(env.DB, "nhap")).post).toBeNull();
   });
 
   it("chống SQL injection qua slug", async () => {
     await seed("that", "published", "2026-03-01");
     // Prepared statement nên chuỗi này là dữ liệu, không phải cú pháp.
-    const post = await findPublishedPost(env.DB, "' OR '1'='1");
-    expect(post).toBeNull();
+    const data = await fetchPostPageData(env.DB, "' OR '1'='1");
+
+    expect(data.post).toBeNull();
+    expect(data.allPosts.map((p) => p.slug)).toEqual(["that"]);
   });
 });

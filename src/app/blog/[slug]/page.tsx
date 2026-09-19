@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getAllPosts, getPostBySlug } from "@/lib/posts";
+import { getPostPageData } from "@/lib/posts";
 import { buildArticleHtmlAndToc } from "@/lib/article-toc";
 import { formatDate } from "@/lib/format";
 import { PORTFOLIO_URL, SITE_NAME } from "@/lib/site";
@@ -30,7 +30,7 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const { post } = await getPostPageData(slug);
 
   if (!post) {
     return {
@@ -66,7 +66,9 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const [post, allPosts] = await Promise.all([getPostBySlug(slug), getAllPosts()]);
+  /* Cùng lời gọi với generateMetadata ở trên: cache() của React gộp lại, nên
+   * cả lần render chỉ đi một vòng tới D1. */
+  const { post, allPosts } = await getPostPageData(slug);
 
   if (!post) {
     notFound();

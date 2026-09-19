@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import type { D1Database } from "@cloudflare/workers-types";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
@@ -15,6 +17,11 @@ export type PostListItem = {
 
 export type Post = PostListItem & {
   contentHtml: string;
+};
+
+export type PostPageData = {
+  post: Post | null;
+  allPosts: PostListItem[];
 };
 
 type PostRow = {
@@ -62,29 +69,6 @@ export async function listPublishedPosts(db: D1Database): Promise<PostListItem[]
   return results.map(toListItem);
 }
 
-export async function findPublishedPost(
-  db: D1Database,
-  slug: string,
-): Promise<Post | null> {
-  const row = await db
-    .prepare(
-      `SELECT slug, title, summary, tags, published_at, body_markdown
-       FROM posts
-       WHERE slug = ? AND status = 'published'`,
-    )
-    .bind(slug)
-    .first<PostRow>();
-
-  if (!row) {
-    return null;
-  }
-
-  return {
-    ...toListItem(row),
-    contentHtml: await markdownToHtml(row.body_markdown ?? ""),
-  };
-}
-
 /* async: true là lưới an toàn cho đường gọi nằm ngoài request context (ví
  * dụ script chạy tay). Mọi đường gọi hiện tại (/, /blog, /blog/[slug],
  * /api/search-index) đều nằm trong request nên bản đồng bộ của
@@ -106,6 +90,45 @@ export async function getAllPosts(): Promise<PostListItem[]> {
   return listPublishedPosts(await db());
 }
 
-export async function getPostBySlug(slug: string): Promise<Post | null> {
-  return findPublishedPost(await db(), slug);
+/* Trang bài viết cần hai thứ: chính bài đó, và danh sách bài đã đăng (để
+ * dựng "bài mới nhất" và "bài liên quan"). Gộp vào một db.batch() để cả hai
+ * đi trong MỘT vòng tới D1 thay vì hai. */
+export async function fetchPostPageData(
+  db: D1Database,
+  slug: string,
+): Promise<PostPageData> {
+  const [chiTiet, danhSach] = await db.batch<PostRow>([
+    db
+      .prepare(
+        `SELECT slug, title, summary, tags, published_at, body_markdown
+         FROM posts
+         WHERE slug = ? AND status = 'published'`,
+      )
+      .bind(slug),
+    db.prepare(
+      `SELECT slug, title, summary, tags, published_at
+       FROM posts
+       WHERE status = 'published'
+       ORDER BY published_at DESC`,
+    ),
+  ]);
+
+  const row = chiTiet.results[0];
+
+  return {
+    post: row
+      ? { ...toListItem(row), contentHtml: await markdownToHtml(row.body_markdown ?? "") }
+      : null,
+    allPosts: danhSach.results.map(toListItem),
+  };
 }
+
+/* cache() của React gộp các lượt gọi trùng tham số TRONG CÙNG một lần
+ * render. generateMetadata và thân trang đều cần cùng dữ liệu này; thiếu
+ * cache() thì mỗi lần render bài là 3 truy vấn (metadata 1, trang 2). Có
+ * cache() và batch ở trên: còn đúng một vòng. Xem
+ * node_modules/next/dist/docs/01-app/01-getting-started/14-metadata-and-og-images.md
+ * mục "Memoizing data requests". */
+export const getPostPageData = cache(
+  async (slug: string): Promise<PostPageData> => fetchPostPageData(await db(), slug),
+);
