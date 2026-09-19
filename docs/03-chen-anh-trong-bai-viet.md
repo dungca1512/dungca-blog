@@ -1,36 +1,67 @@
 # Chèn ảnh trong bài viết
 
-## 1) Đặt ảnh đúng thư mục
+Ảnh trong bài nằm ở **R2** (bucket `blog-media`), không nằm trong repo. Không
+còn chuyện bỏ file vào `public/images/posts/` rồi commit.
 
-Tạo thư mục theo slug bài viết để dễ quản lý:
+## Cách làm
+
+1. Mở bài trong `/admin`, đặt con trỏ vào chỗ muốn có ảnh.
+2. Bấm **Chèn ảnh**, chọn file.
+3. Trình soạn thảo upload rồi chèn `![](https://media-blog…/…)` **tại đúng vị
+   trí con trỏ**.
+4. Gõ mô tả vào giữa hai ngoặc vuông: `![Sơ đồ pipeline](https://…)`.
+
+Bước 4 không tự động được — máy không biết ảnh vẽ gì. Ảnh thiếu `alt` là ảnh
+vô hình với trình đọc màn hình và với Google.
+
+## Giới hạn
+
+| Thứ | Giá trị | Lý do |
+|---|---|---|
+| Dung lượng | 5 MB mỗi file | Vượt mức này là ảnh chưa nén. R2 tính tiền theo dung lượng lưu. |
+| Kiểu file | `png`, `jpeg`, `webp`, `gif`, `svg+xml` | Danh sách **cho phép**: kiểu lạ mặc định bị từ chối. |
+
+Server kiểm cả hai, không tin phía trình duyệt: `Content-Type` lưu vào R2 là
+kiểu đã qua danh sách cho phép, không phải chuỗi client gửi lên. Một file
+`.html` gắn nhãn `image/png` không thể trở lại thành HTML khi phục vụ.
+
+## Tên file trên R2
 
 ```text
-public/images/posts/<slug-bai-viet>/
+2026/09/so-do-pipeline-a1b2c3d4e5.png
+   │   │        │             │
+   │   │        │             └─ 10 ký tự ngẫu nhiên
+   │   │        └─ tên file gốc, bỏ dấu, kebab-case
+   └───┴─ năm/tháng lúc upload (UTC)
 ```
 
-Ví dụ:
+Hậu tố ngẫu nhiên là thứ bảo đảm hai lần upload cùng tên file không ghi đè
+nhau — ghi đè ở đây là mất ảnh của bài cũ trong im lặng. Đổi lại, cùng một ảnh
+upload hai lần là hai object, tốn chỗ gấp đôi.
 
-```text
-public/images/posts/2026-03-10-ml-co-ban-05-linear-regression/
+Vì tên đã duy nhất nên nội dung không bao giờ đổi, ảnh được phục vụ kèm
+`Cache-Control: public, max-age=31536000, immutable`.
+
+## Ảnh không bị dọn
+
+Xoá bài hay xoá đoạn Markdown chứa ảnh **không** xoá object trong R2. Muốn dọn
+thì phải tự làm:
+
+```bash
+npx wrangler r2 object delete blog-media/2026/09/ten-anh-a1b2c3d4e5.png --remote
 ```
 
-## 2) Chèn ảnh trong Markdown
+## Ảnh tĩnh của giao diện
 
-```md
-![Mô tả ảnh](/images/posts/2026-03-10-ml-co-ban-05-linear-regression/so-do.png)
-```
+`public/` vẫn dùng bình thường cho logo, ảnh mặc định Open Graph, ảnh minh hoạ
+trang dự án — những thứ đi kèm code và nên nằm trong git. Chỉ ảnh **trong bài
+blog** mới đi qua R2.
 
-## 3) Chú thích ảnh (tùy chọn)
+## Khi có sự cố
 
-```md
-![Đường fit tuyến tính](/images/posts/2026-03-10-ml-co-ban-05-linear-regression/fit.png)
-
-*Hình 1: So sánh dữ liệu thật và đường dự đoán.*
-```
-
-## 4) Lưu ý quan trọng
-
-- Dùng đường dẫn bắt đầu bằng `/images/...`.
-- Tránh dấu cách trong tên file ảnh, ưu tiên `kebab-case`.
-- Định dạng khuyên dùng: `webp`, `png`, `jpg`.
-- Vì project đang `output: "export"`, ảnh trong `public/` sẽ được xuất thẳng ra static site.
+| Thông báo | Ý nghĩa |
+|---|---|
+| "Chưa cấu hình MEDIA_BASE_URL cho bucket ảnh." | Thiếu secret. Xem [04 — Secret](./04-trien-khai-cloudflare-workers.md#secret). |
+| "Không nhận kiểu file …" | Ngoài danh sách cho phép. Đổi sang png/webp. |
+| "File 7.4 MB, tối đa 5 MB." | Nén ảnh lại trước khi upload. |
+| Upload xong, ảnh hiện ô vỡ | Tên miền ảnh chưa trỏ đúng bucket. Thử mở thẳng URL ảnh trong tab mới — 404 nghĩa là lỗi ở tên miền/bucket, không phải ở bài. |

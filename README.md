@@ -1,121 +1,77 @@
 # dungca-blog
 
-> **Lưu ý (2026-09):** Bài viết giờ nằm trong **D1**, không còn đọc từ
-> `content/posts/`. Site chạy trên **Cloudflare Workers** (qua OpenNext),
-> không phải Cloudflare Pages. Phần còn lại của README này và
-> `docs/01`–`docs/05` vẫn mô tả luồng cũ (Markdown + Pages) — sẽ được viết
-> lại ở Kế hoạch B khi luồng đăng bài cuối cùng chốt xong.
-
 - Blog: <https://blog-dungca.ai-innovation-homelab.org>
 - Portfolio: <https://portfolio-dungca.ai-innovation-homelab.org>
 
-Bộ khung blog sử dụng Next.js (App Router) để:
+Blog Next.js (App Router) chạy trên **Cloudflare Workers** qua OpenNext.
 
-- Viết bài bằng Markdown trong `content/posts/`
-- Viết trang demo dự án trong `content/projects/`
-- Tự động hiển thị repo AI trên GitHub `dungca1512`
-- Build static (`output: "export"`) để deploy lên Cloudflare Pages
+| Thứ | Nằm ở đâu | Sửa bằng cách nào |
+|---|---|---|
+| Bài viết | D1 (`posts`) | Soạn thẳng trên web tại `/admin` |
+| Ảnh trong bài | R2 (`blog-media`) | Nút upload trong trình soạn thảo |
+| Trang dự án | `content/projects/*.md` | Sửa file, commit, push |
+| Giao diện, logic | `src/` | Sửa file, commit, push |
 
-## 1) Chạy local
+Hai luồng khác nhau, đừng lẫn: **bài viết không nằm trong git**. Viết bài
+không cần commit; đổi code thì phải.
+
+`content/posts/` còn trong repo chỉ để làm nguồn cho `scripts/migrate-posts.mjs`
+(lần chuyển dữ liệu sang D1). Thêm file vào đó **không** tạo bài mới.
+
+## Đăng bài
+
+1. Mở <https://blog-dungca.ai-innovation-homelab.org/admin>
+2. Đăng nhập bằng GitHub (chỉ tài khoản khai ở `ADMIN_GITHUB_LOGIN` vào được)
+3. Soạn Markdown, xem trước, upload ảnh, lưu nháp
+4. Bấm **Đăng bài**
+
+Chi tiết: [docs/02](./docs/02-viet-bai-blog-markdown.md).
+
+## Chạy local
 
 ```bash
 npm install
-npm run dev
+npm run dev          # http://localhost:3000
 ```
 
-## Tài liệu chi tiết
+Bản chạy trên runtime Workers thật (sát production hơn):
 
-Tài liệu tách riêng trong thư mục [docs](./docs/README.md):
+```bash
+npm run cf:preview   # http://localhost:8788
+```
 
-- Cài đặt/chạy local
-- Viết bài Markdown
-- Chèn ảnh trong bài viết
-- Triển khai Cloudflare Pages
-- CI/CD với GitHub Actions
+Chi tiết: [docs/01](./docs/01-cai-dat-va-chay-local.md).
 
-## 2) Cấu trúc thư mục nội dung
+## Trước khi push code
+
+```bash
+npm run verify       # lint → typecheck → test → check:colors → build
+```
+
+Push lên `main` là deploy thật, không có bước duyệt. Xem
+[docs/05](./docs/05-ci-cd-github-actions.md).
+
+## Cấu trúc
 
 ```text
-content/
-  posts/
-    2026-03-03-khoi-tao-blog.md
-    _template.md
-  projects/
-    2026-03-03-demo-ai-local.md
-    _template.md
-    featured-repos.json
+src/
+  app/            # route App Router; app/admin và app/api/admin là khu quản trị
+  lib/            # posts (D1), auth/session, media (R2), markdown, article-toc
+  components/     # giao diện, gồm cả trình soạn thảo admin
+content/projects/ # trang dự án, vẫn viết bằng Markdown trong repo
+migrations/       # migration D1, CHỈ ĐƯỢC CỘNG THÊM (xem docs/04)
+scripts/          # smoke, build index dự án, cổng màu, migrate bài
+tests/            # vitest: tests/*.test.ts chạy Node, tests/workers/* chạy workerd
 ```
 
-## 3) Viết bài blog Markdown
+## Domain và cấu hình
 
-1. Tạo file mới trong `content/posts/` với tên dạng `slug.md`.
-2. Khai báo frontmatter:
+`SITE_URL` khai một chỗ duy nhất tại [src/lib/site.ts](./src/lib/site.ts), dùng lại cho
+`metadataBase`, canonical, Open Graph, `sitemap.xml`, `robots.txt`.
 
-```yaml
----
-title: "Tiêu đề"
-summary: "Mô tả ngắn"
-date: "2026-03-03"
-tags:
-  - nextjs
-  - markdown
----
-```
+Binding, route, D1, R2: [wrangler.jsonc](./wrangler.jsonc) — file đó có chú thích
+lý do cho từng lựa chọn, đọc trước khi sửa.
 
-3. Viết nội dung Markdown bên dưới.
-4. Trang sẽ xuất hiện tại:
-   - Danh sách: `/blog`
-   - Chi tiết: `/blog/[slug]`
+## Tài liệu
 
-Nếu chưa muốn publish, thêm `draft: true`.
-
-## 4) Upload ảnh vào bài viết
-
-1. Tạo thư mục ảnh theo slug bài viết, ví dụ:
-   `public/images/posts/2026-03-03-khoi-tao-blog/`
-2. Đặt ảnh vào thư mục đó.
-3. Chèn trong Markdown:
-
-```md
-![Mô tả ảnh](/images/posts/2026-03-03-khoi-tao-blog/anh-minh-hoa.png)
-```
-
-Ảnh sẽ được build cùng site và hoạt động trực tiếp trên Cloudflare Pages.
-
-## 5) Demo AI repos từ GitHub
-
-- Trang `/projects` gồm:
-  - Demo viết tay bằng Markdown (`content/projects/*.md`)
-  - Repo AI tự động lấy từ GitHub
-
-- File `content/projects/featured-repos.json`:
-
-```json
-{
-  "githubUser": "dungca1512",
-  "featured": ["ten-repo-uu-tien"]
-}
-```
-
-`featured` là danh sách repo muốn ép hiển thị (kể cả khi tên/mô tả không match bộ lọc AI).
-
-## 6) Deploy Cloudflare Pages (Git integration)
-
-Kết nối repo GitHub với Cloudflare Pages, sau đó dùng:
-
-- Framework preset: `Next.js (Static HTML Export)` hoặc `None`
-- Build command: `npm run build`
-- Build output directory: `out`
-- Node.js version: `20`
-
-Mỗi lần push lên nhánh đã kết nối, Cloudflare sẽ tự build và deploy.
-
-Custom domain: `blog-dungca.ai-innovation-homelab.org`. URL này khai báo tại
-[src/lib/site.ts](./src/lib/site.ts) (`SITE_URL`) và được dùng cho `metadataBase`, canonical,
-Open Graph, `sitemap.xml`, `robots.txt` — đổi domain thì chỉ sửa một chỗ đó.
-
-## 7) Biến môi trường khuyến nghị
-
-- `GITHUB_TOKEN` (optional): tăng hạn mức gọi GitHub API khi build.
-
-Không có token vẫn build được, nhưng có thể bị giới hạn request nếu deploy nhiều lần liên tiếp.
+Xem [docs/](./docs/README.md).
